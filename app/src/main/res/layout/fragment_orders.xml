@@ -11,14 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="#FFAF20"
         android:padding="10dp">
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="5dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_arrow_back"
-            android:background="#00000000" />
+
+        <ImageView
+            android:id="@+id/cart_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/icon_logo"
+            android:contentDescription="@string/cart_icon" />
 
         <TextView
             android:layout_width="0dp"
@@ -35,7 +36,7 @@
             android:layout_height="30dp"
             android:layout_margin="5dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/cart"
+            android:src="@drawable/baseline_shopping_cart_24"
             android:background="#00000000" />
     </LinearLayout>
 
