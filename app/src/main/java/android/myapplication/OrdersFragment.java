@@ -3,7 +3,9 @@ package android.myapplication;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,18 +16,19 @@ import java.util.List;
 
 public class OrdersFragment extends Fragment {
     private RecyclerView recyclerView;
-    private OrdersAdapter ordersAdapter;
+    private OrderAdapter orderAdapter;
     private List<String> ordersList;
-
-    public OrdersFragment() {
-        // Required empty public constructor
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ordersList = new ArrayList<>();
-
+        ordersList.add("Category 1");
+        ordersList.add("Category 2");
+        ordersList.add("Category 3");
+        ordersList.add("Category 4");
+        ordersList.add("Category 5");
+        ordersList.add("Category 6");
     }
 
     @Override
@@ -33,8 +36,8 @@ public class OrdersFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_orders, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
-        ordersAdapter = new OrdersAdapter(ordersList);
-        recyclerView.setAdapter(ordersAdapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));        orderAdapter = new OrderAdapter(ordersList);
+        recyclerView.setAdapter(orderAdapter);
         return view;
     }
 }
