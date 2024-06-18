@@ -1,10 +1,13 @@
 package android.myapplication;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
@@ -29,6 +32,12 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrdersViewHo
         String order = ordersList.get(position);
 //        holder.categoryText.setText(order.title);
         holder.categoryText.setText(order);
+        
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), OrderItemActivity.class);
+            intent.putExtra("order", order); // Pass any data you want to OrderItemActivity
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override

@@ -36,7 +36,8 @@ public class OrdersFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_orders, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));        orderAdapter = new OrderAdapter(ordersList);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        orderAdapter = new OrderAdapter(ordersList);
         recyclerView.setAdapter(orderAdapter);
         return view;
     }
