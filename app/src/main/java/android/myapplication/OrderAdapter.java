@@ -32,8 +32,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrdersViewHo
         String order = ordersList.get(position);
 //        holder.categoryText.setText(order.title);
         holder.categoryText.setText(order);
-        
-        holder.itemView.setOnClickListener(v -> {
+
+        holder.categoryImageButton.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), OrderItemActivity.class);
             intent.putExtra("order", order); // Pass any data you want to OrderItemActivity
             v.getContext().startActivity(intent);
@@ -53,6 +53,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrdersViewHo
             super(itemView);
             categoryText = itemView.findViewById(R.id.categoryText);
             categoryImageButton = itemView.findViewById(R.id.categoryImageButton);
+
         }
     }
 }
