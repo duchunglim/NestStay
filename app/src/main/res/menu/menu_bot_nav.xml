@@ -4,18 +4,18 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/baseline_home_24"
-            android:title="Home" />
+            android:title="Trang Chủ" />
         <item
             android:id="@+id/nav_orders"
             android:icon="@drawable/baseline_menu_book_24"
-            android:title="Orders" />
+            android:title="Đặt Món" />
         <item
             android:id="@+id/nav_reservation"
             android:icon="@drawable/baseline_border_color_24"
-            android:title="Reservation" />
+            android:title="Đặt Bàn" />
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/baseline_person_24"
-            android:title="Profile" />
+            android:title="Hồ Sơ" />
     </group>
 </menu>

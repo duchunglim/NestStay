@@ -16,7 +16,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ngày"
+            android:text="Đặt bàn"
             android:textSize="24sp"
             android:textStyle="bold"
             android:gravity="center"
@@ -29,6 +29,8 @@
             android:text="Chọn Ngày"
             android:textSize="18sp"
             android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="#10455B"
             android:layout_marginBottom="8dp"/>
 
         <!-- Date Picker -->
@@ -46,6 +48,8 @@
             android:layout_height="wrap_content"
             android:text="Chọn Giờ"
             android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#10455B"
             android:gravity="center"
             android:layout_marginBottom="8dp"/>
 
@@ -62,8 +66,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Số lượng người"
-            android:textSize="16sp"
+            android:text="Chọn Số Lượng Người"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#10455B"
             android:layout_gravity="center"
             android:layout_marginBottom="8dp"/>
 
@@ -205,49 +211,106 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nhập Thông Tin"
+            android:text="Nhập Thông Tin Khách Hàng "
             android:textSize="18sp"
             android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="#10455B"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp"/>
 
-        <!-- Customer Information -->
-        <EditText
-            android:id="@+id/etName"
+        <com.google.android.material.textfield.TextInputLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:startIconDrawable="@drawable/baseline_person_24"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Tên khách hàng"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp">
 
-        <EditText
-            android:id="@+id/etPhone"
+            <EditText
+                android:id="@+id/etName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:inputType="text"
+                android:padding="12dp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:startIconDrawable="@drawable/baseline_local_phone_24"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Số điện thoại"
-            android:inputType="phone"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp">
 
-        <EditText
-            android:id="@+id/etAddress"
+            <EditText
+                android:id="@+id/etPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:inputType="phone"
+                android:padding="12dp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:startIconDrawable="@drawable/baseline_add_location_alt_24"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Địa chỉ"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp">
 
-        <EditText
-            android:id="@+id/etEmail"
+            <EditText
+                android:id="@+id/etAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:inputType="textPostalAddress"
+                android:padding="12dp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:startIconDrawable="@drawable/baseline_alternate_email_24"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Email"
-            android:inputType="textEmailAddress"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp">
 
-        <EditText
-            android:id="@+id/etNotes"
+            <EditText
+                android:id="@+id/etEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:inputType="textEmailAddress"
+                android:padding="12dp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:startIconDrawable="@drawable/baseline_edit_note_24"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Thêm ghi chú"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp">
+
+            <EditText
+                android:id="@+id/etNotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:gravity="top"
+                android:padding="12dp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <!-- Confirm Button -->
         <Button
