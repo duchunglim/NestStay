@@ -13,6 +13,12 @@
         android:theme="@style/Theme.NestStay"
         tools:targetApi="31">
         <activity
+            android:name=".OrderActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ItemDescriptionActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
