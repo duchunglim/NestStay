@@ -16,9 +16,11 @@
         android:padding="15dp">
 
         <ImageView
+            android:id="@+id/back_button"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/icon_logo" />
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back" />
 
         <TextView
             android:layout_width="0dp"

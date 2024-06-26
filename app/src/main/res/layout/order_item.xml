@@ -42,14 +42,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         app:cardCornerRadius="50dp">
+
         <ImageButton
             android:id="@+id/plus_icon"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
             android:background="#FFAF20"
-            android:src="@drawable/baseline_add_24"
             android:scaleType="centerCrop"
-            android:layout_gravity="bottom"/>
+            android:src="@drawable/baseline_add_24" />
     </androidx.cardview.widget.CardView>
 
 
