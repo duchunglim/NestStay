@@ -5,17 +5,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrdersViewHolder> {
 
-    private List<String> ordersList;
+    private List<ProductCategory> ordersList;
 
-    public OrderAdapter(List<String> ordersList) {
+    public OrderAdapter(List<ProductCategory> ordersList) {
         this.ordersList = ordersList;
     }
 
@@ -28,13 +33,33 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrdersViewHo
 
     @Override
     public void onBindViewHolder(@NonNull OrdersViewHolder holder, int position) {
-        String order = ordersList.get(position);
-//        holder.categoryText.setText(order.title);
-        holder.categoryText.setText(order);
+        ProductCategory productCategory = ordersList.get(position);
+        holder.categoryText.setText(productCategory.getName());
 
-        holder.categoryImageButton.setOnClickListener(v -> {
+        if (productCategory.getImage() != null && !productCategory.getImage().isEmpty()) {
+            Picasso.get()
+                    .load(productCategory.getImage())
+                    .error(R.drawable.placeholder) // Placeholder image if loading fails
+                    .into(holder.categoryImage, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            // Image loaded successfully
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            // Handle error (e.g., log, show placeholder)
+                            e.printStackTrace();
+                        }
+                    });
+        } else {
+            // Handle case where image URL is empty or null
+            holder.categoryImage.setImageResource(R.drawable.placeholder);
+        }
+
+        holder.categoryImage.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), OrderItemActivity.class);
-            intent.putExtra("order", order); // Pass any data you want to OrderItemActivity
+            intent.putExtra("productCategory", productCategory.getName());
             v.getContext().startActivity(intent);
         });
     }
@@ -46,12 +71,12 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrdersViewHo
 
     public static class OrdersViewHolder extends RecyclerView.ViewHolder {
         TextView categoryText;
-        ImageButton categoryImageButton;
+        ImageView categoryImage;
 
         public OrdersViewHolder(@NonNull View itemView) {
             super(itemView);
             categoryText = itemView.findViewById(R.id.categoryText);
-            categoryImageButton = itemView.findViewById(R.id.categoryImageButton);
+            categoryImage = itemView.findViewById(R.id.categoryImage);
 
         }
     }
