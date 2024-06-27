@@ -9,8 +9,6 @@
         android:id="@+id/categoryImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxHeight="200dp"
-        android:maxWidth="200dp"
         android:background="#00000000"
         android:src="@drawable/placeholder" />
 

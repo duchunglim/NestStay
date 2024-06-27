@@ -2,277 +2,277 @@
   "categories": [
     {
       "name": "Gà rán",
-      "image": "https://drive.google.com/file/d/1R1M95zuTcvBM_PJxjEEiwyV-ejG4uvGI/view?usp=sharing",
+      "image": "https://drive.google.com/uc?id=1R1M95zuTcvBM_PJxjEEiwyV-ejG4uvGI",
       "items": [
         {
           "id": 1,
           "name": "Gà rán giòn",
           "description": "Gà rán giòn rụm, thơm ngon, phủ lớp vỏ ngoài vàng óng hấp dẫn.",
           "price": 40000,
-          "image": "https://drive.google.com/file/d/1R1M95zuTcvBM_PJxjEEiwyV-ejG4uvGI/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1R1M95zuTcvBM_PJxjEEiwyV-ejG4uvGI"
         },
         {
           "id": 2,
           "name": "Gà rán sốt cay",
           "description": "Gà rán sốt cay nóng hổi, đậm đà với lớp gia vị đặc trưng.",
           "price": 45000,
-          "image": "https://drive.google.com/file/d/1Xm770SfIAG5mwSR3KxIQQAnRRW8fDxxi/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1Xm770SfIAG5mwSR3KxIQQAnRRW8fDxxi"
         },
         {
           "id": 3,
           "name": "Gà rán tỏi",
           "description": "Gà rán tỏi thơm phức, vị tỏi hòa quyện với lớp vỏ giòn.",
           "price": 45000,
-          "image": "https://drive.google.com/file/d/1RQbBFGAX8A4QA3MnVz24TRs4OGPqNfmE/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1RQbBFGAX8A4QA3MnVz24TRs4OGPqNfmE"
         },
         {
           "id": 4,
           "name": "Gà rán mật ong",
           "description": "Gà rán mật ong ngọt ngào, hấp dẫn với lớp vỏ giòn rụm.",
           "price": 45000,
-          "image": "https://drive.google.com/file/d/170P1u92S4qufeEEH57nAL5vBDOMK5ct-/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=170P1u92S4qufeEEH57nAL5vBDOMK5ct-"
         },
         {
           "id": 5,
           "name": "Gà rán sốt bơ",
           "description": "Gà rán sốt bơ giòn rụm với hương vị bơ tan chảy xao xuyến lòng người.",
           "price": 45000,
-          "image": "https://drive.google.com/file/d/1UJai-6eiieWRlGD4RLdcuOmWN6ld2TCy/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1UJai-6eiieWRlGD4RLdcuOmWN6ld2TCy"
         },
         {
           "id": 6,
           "name": "Gà rán sốt cà chua",
           "description": "Gà rán sốt cà chua đặc trưng, giòn rụm với hương vị đa dạng.",
           "price": 45000,
-          "image": "https://drive.google.com/file/d/1oJGRVZc6QeDLy9PYTHEHHuavNoBOgVno/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1oJGRVZc6QeDLy9PYTHEHHuavNoBOgVno"
         },
         {
           "id": 7,
           "name": "Gà chiên nước mắm",
           "description": "Gà chiên nước mắm thơm ngon nồng vị, giòn và mọng nước.",
           "price": 45000,
-          "image": "https://drive.google.com/file/d/1HexaIkbHMyP6hvrnVQFEVp20aJr1VLhS/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1HexaIkbHMyP6hvrnVQFEVp20aJr1VLhS"
         },
         {
           "id": 8,
           "name": "Gà rán sốt kim chi ",
           "description": "Nuggets gà giòn.",
           "price": 45000,
-          "image": "https://drive.google.com/file/d/1VnTtEFMEwFvZ2WqvMkSCS-z9veL-8tdf/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1VnTtEFMEwFvZ2WqvMkSCS-z9veL-8tdf"
         }
       ]
     },
     {
       "name": "Mì ý",
-      "image": "https://drive.google.com/file/d/1_oyfao8g8_dEDisZgd5BGYd6htdeF6Zz/view?usp=sharing",
+      "image": "https://drive.google.com/uc?id=1_oyfao8g8_dEDisZgd5BGYd6htdeF6Zz",
       "items": [
         {
           "id": 9,
           "name": "Mì ý sốt cà chua",
           "description": "Mì ý sốt cà chua đậm đà, sợi mì mềm mại và sốt cà chua tươi ngon.",
           "price": 50000,
-          "image": "https://drive.google.com/file/d/1Pmb8FG8k-nlNt9bf4p0XMwauVqpc2j9J/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1Pmb8FG8k-nlNt9bf4p0XMwauVqpc2j9J"
         },
         {
           "id": 10,
           "name": "Mì ý sốt kem",
           "description": "Mì ý sốt kem béo ngậy, hòa quyện với sợi mì mềm mịn và thơm ngon.",
           "price": 50000,
-          "image": "https://drive.google.com/file/d/1AZBqB0g-rrLjwCVj7-LYa6RV_1rveyGz/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1AZBqB0g-rrLjwCVj7-LYa6RV_1rveyGz"
         },
         {
           "id": 11,
           "name": "Mì ý sốt bò bằm",
           "description": "Mì ý sốt bò bằm thơm ngon, kết hợp hoàn hảo giữa mì và thịt bò bằm nhuyễn.",
           "price": 60000,
-          "image": "https://drive.google.com/file/d/1_oyfao8g8_dEDisZgd5BGYd6htdeF6Zz/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1_oyfao8g8_dEDisZgd5BGYd6htdeF6Zz"
         },
         {
           "id": 12,
           "name": "Mì ý hải sản",
           "description": "Mì ý hải sản tươi ngon, đậm đà với hương vị biển cả.",
           "price": 80000,
-          "image": "https://drive.google.com/file/d/1pAb64UNAPowzchIcZ3--vxI-3MzOLKDH/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1pAb64UNAPowzchIcZ3--vxI-3MzOLKDH"
         },
         {
           "id": 13,
           "name": "Mì ý sốt pesto",
           "description": "Mì ý sốt pesto đặc biệt, thơm mùi húng quế và phô mai.",
           "price": 50000,
-          "image": "https://drive.google.com/file/d/1FBSuTH3J_mKuthhRwzKoYsDcopYo3wEc/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1FBSuTH3J_mKuthhRwzKoYsDcopYo3wEc"
         },
         {
           "id": 14,
           "name": "Mì ý sốt Thái",
           "description": "Mì ý sốt Thái cay nồng nàn, cùng mùi vị thơm ngon đặc biệt không thể cưỡng lại.",
           "price": 60000,
-          "image": "https://drive.google.com/file/d/11LmY6CA4T548jLm__iiTTc9aFrf0IOF-/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=11LmY6CA4T548jLm__iiTTc9aFrf0IOF-"
         },
         {
           "id": 15,
           "name": "Mì ý sốt nấm",
           "description": "Mì ý sốt nấm đậm đà, kết hợp hương vị nấm tươi và mì mềm.",
           "price": 45000,
-          "image": "https://drive.google.com/file/d/1rIkvcWZREyCXboMa3HEpJtErdi1J-Wig/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1rIkvcWZREyCXboMa3HEpJtErdi1J-Wig"
         },
         {
           "id": 16,
           "name": "Mì ý sốt tương đen",
           "description": "Mì ý sốt tương đen thơm ngon, hương vị nước tương đậm mùi và hấp dẫn.",
           "price": 50000,
-          "image": "https://drive.google.com/file/d/1tRImsvuSpnVsRtEfglrpSSnRlHqGGEGM/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1tRImsvuSpnVsRtEfglrpSSnRlHqGGEGM"
         },
         {
           "id": 17,
           "name": "Mì ý sốt phô mai",
           "description": "Mì ý sốt phô mai hòa quyện tan chảy, đậm đà và béo ngậy.",
           "price": 55000,
-          "image": "https://drive.google.com/file/d/11NLV_D6gib0My2Xt2JcLlOWtAvqlXM2B/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=11NLV_D6gib0My2Xt2JcLlOWtAvqlXM2B"
         },
         {
           "id": 18,
           "name": "Mì ý sốt tỏi",
           "description": "Mì ý sốt tỏi hương vị đặc biệt chưa từng có, đậm đà hương vị tỏi, thơm và ngon miệng.",
           "price": 55000,
-          "image": "https://drive.google.com/file/d/1WiJpKAJcpgLkkIaS5bPH3BdtqxgpxmWD/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1WiJpKAJcpgLkkIaS5bPH3BdtqxgpxmWD"
         }
       ]
     },
     {
       "name": "Burger",
-      "image": "https://drive.google.com/file/d/11cbxajvw2H27MZRgn4wDRRGg3fynztlD/view?usp=sharing",
+      "image": "https://drive.google.com/uc?id=11cbxajvw2H27MZRgn4wDRRGg3fynztlD",
       "items": [
         {
           "id": 19,
           "name": "Burger bò",
           "description": "Burger bò thơm ngon, đậm đà với thịt bò tươi ngon và sốt đặc biệt.",
           "price": 50000,
-          "image": "https://drive.google.com/file/d/1B_A2tw_UPbLG5VtgyDaZ_bl7-Ul6Y7_K/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1B_A2tw_UPbLG5VtgyDaZ_bl7-Ul6Y7_K"
         },
         {
           "id": 20,
           "name": "Burger gà",
           "description": "Burger gà hấp dẫn, giòn rụm và ngon miệng với thịt gà tươi ngon.",
           "price": 45000,
-          "image": "https://drive.google.com/file/d/1DKVVe_PBNus5LXv2P6U5ZmXCjDDqavij/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1DKVVe_PBNus5LXv2P6U5ZmXCjDDqavij"
         },
         {
           "id": 21,
           "name": "Burger trứng muối",
           "description": "Burger trứng muối béo ngậy, kết hợp hoàn hảo giữa rau củ và trứng muối.",
           "price": 40000,
-          "image": "https://drive.google.com/file/d/1wXsX_CKpNYwatWIfwokfSGzoDo4I0VWm/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1wXsX_CKpNYwatWIfwokfSGzoDo4I0VWm"
         },
         {
           "id": 22,
           "name": "Burger cá",
           "description": "Burger cá tươi ngon, giòn rụm với thịt cá thơm lừng.",
           "price": 40000,
-          "image": "https://drive.google.com/file/d/17gGaDVZu1i8YAfkjzTt3TpQxwBMMTljO/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=17gGaDVZu1i8YAfkjzTt3TpQxwBMMTljO"
         },
         {
           "id": 23,
           "name": "Burger tôm",
           "description": "Burger tôm đặc biệt, giòn tan và thơm ngon với thịt tôm tươi.",
           "price": 60000,
-          "image": "https://drive.google.com/file/d/1eTESvQaMWQz7aETFoS2x8rv0OCpC2JsX/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1eTESvQaMWQz7aETFoS2x8rv0OCpC2JsX"
         },
         {
           "id": 24,
           "name": "Burger gà cay",
           "description": "Burger gà cay nóng hổi, đậm đà với thịt gà cay thơm ngon.",
           "price": 55000,
-          "image": "https://drive.google.com/file/d/11cbxajvw2H27MZRgn4wDRRGg3fynztlD/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=11cbxajvw2H27MZRgn4wDRRGg3fynztlD"
         },
         {
           "id": 25,
           "name": "Burger cua",
           "description": "Burger cua kèm phô mai béo ngậy, giòn rụm và ngon miệng.",
           "price": 80000,
-          "image": "https://drive.google.com/file/d/1Ge6ovptbAnaWlTDLkgdxu00j4eFHyzSQ/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1Ge6ovptbAnaWlTDLkgdxu00j4eFHyzSQ"
         },
         {
           "id": 26,
           "name": "Burger nấm",
           "description": "Burger nấm đặc biệt với hương vị độc đáo và hấp dẫn, thơm ngon dành cho những người ăn chay.",
           "price": 40000,
-          "image": "https://drive.google.com/file/d/1idvq7EHr4LCDFxQXTB84XVoQyvp7Q5lS/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1idvq7EHr4LCDFxQXTB84XVoQyvp7Q5lS"
         }
       ]
     },
     {
       "name": "Đồ uống",
-      "image": "https://drive.google.com/file/d/1_dZYLKOPsWOuRwyeSk9CK-_C81fv8GBn/view?usp=sharing",
+      "image": "https://drive.google.com/uc?id=1_dZYLKOPsWOuRwyeSk9CK-_C81fv8GBn",
       "items": [
         {
           "id": 27,
           "name": "Coca Cola",
           "description": "Nước giải khát có ga, vị truyền thống, thích hợp dùng kèm đồ ăn.",
           "price": 20000,
-          "image": "https://drive.google.com/file/d/1_dZYLKOPsWOuRwyeSk9CK-_C81fv8GBn/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1_dZYLKOPsWOuRwyeSk9CK-_C81fv8GBn"
         },
         {
           "id": 28,
           "name": "Pepsi",
           "description": "Nước giải khát có ga, vị mát lạnh, thích hợp với các món ăn.",
           "price": 20000,
-          "image": "https://drive.google.com/file/d/1bWXqyCgoeT53pf0ujS8Ue7KR95WHD_4z/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1bWXqyCgoeT53pf0ujS8Ue7KR95WHD_4z"
         },
         {
           "id": 29,
           "name": "Sprite",
           "description": "Nước giải khát không ga, vị chanh tươi mát, giải nhiệt hiệu quả.",
           "price": 20000,
-          "image": "https://drive.google.com/file/d/1VcDbqHFD7FkFSJcWl9YDVoS4iuUSbS4G/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1VcDbqHFD7FkFSJcWl9YDVoS4iuUSbS4G"
         },
         {
           "id": 30,
           "name": "7 up",
           "description": "Nước giải khát có ga mát lạnh sảng khoái, giải nhiệt và đầy năng lượng.",
           "price": 20000,
-          "image": "https://drive.google.com/file/d/1aV8zv2qwZj6PkcP4v9qnU554SWwQ2CEC/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1aV8zv2qwZj6PkcP4v9qnU554SWwQ2CEC"
         },
         {
           "id": 31,
           "name": "Trà xanh",
           "description": "Trà xanh thanh mát, giàu chất chống oxy hóa, giải nhiệt tốt.",
           "price": 22000,
-          "image": "https://drive.google.com/file/d/1frLw4a0G55HerdJ4gW8UdLA3hMI2SA1-/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1frLw4a0G55HerdJ4gW8UdLA3hMI2SA1-"
         },
         {
           "id": 32,
           "name": "Nước suối",
           "description": "Nước suối tinh khiết, thích hợp dùng hàng ngày, giải khát tốt.",
           "price": 15000,
-          "image": "https://drive.google.com/file/d/1QWIf77dKZ5d-bg0s1PvcnqX5fBDT2yj0/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1QWIf77dKZ5d-bg0s1PvcnqX5fBDT2yj0"
         },
         {
           "id": 33,
           "name": "Trà chanh",
           "description": "Trà chanh tươi mát, kết hợp giữa trà và chanh, giải khát tốt.",
           "price": 22000,
-          "image": "https://drive.google.com/file/d/1Rfa2LGnrdBO7PhqNLXB1_GJLHiJ3B5sV/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1Rfa2LGnrdBO7PhqNLXB1_GJLHiJ3B5sV"
         },
         {
           "id": 34,
           "name": "Nước ép táo",
           "description": "Nước ép táo tươi ngon, giàu vitamin, tốt cho sức khỏe.",
           "price": 27000,
-          "image": "https://drive.google.com/file/d/1Xxj6oh4gERy8-tEpPj-fB_xi5Xp2-evS/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1Xxj6oh4gERy8-tEpPj-fB_xi5Xp2-evS"
         },
         {
           "id": 35,
           "name": "Nước ép dứa",
           "description": "Nước ép dứa tươi mát, giàu chất dinh dưỡng, tăng cường sức khỏe.",
           "price": 27000,
-          "image": "https://drive.google.com/file/d/1ocgV628v74WVIV2PBG-j-cthzed5BZQB/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1ocgV628v74WVIV2PBG-j-cthzed5BZQB"
         },
         {
           "id": 36,
           "name": "Nước ép dưa hấu",
           "description": "Nước ép dưa hấu ngon miệng giải nhiệt, giàu chất dinh dưỡng.",
           "price": 30000,
-          "image": "https://drive.google.com/file/d/1OMbQh1NHGlduIXTftigq1pb0yWwgaZ0M/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1OMbQh1NHGlduIXTftigq1pb0yWwgaZ0M"
         }
       ]
     },
@@ -285,152 +285,152 @@
           "name": "Bánh bông lan",
           "description": "Bánh bông lan mùi vị đặc trưng, hương vị ngọt ngào kèm với trái cây tươi dâu và việt quất",
           "price": 65000,
-          "image": "https://drive.google.com/file/d/1OrDFFUTmElx0TkjTjzel-zTluBd4R4ry/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1OrDFFUTmElx0TkjTjzel-zTluBd4R4ry"
         },
         {
           "id": 38,
           "name": "Bánh donut",
           "description": "Bánh donot vừa giòn vừa mềm dẻo, ngon xuất sắc.",
           "price": 25000,
-          "image": "https://drive.google.com/file/d/1y7CbdcKj_CxhCFVe1aN5l5oAXApEAKpq/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1y7CbdcKj_CxhCFVe1aN5l5oAXApEAKpq"
         },
         {
           "id": 39,
           "name": "Kem vani ngũ vị",
           "description": "Kem vani ngũ vị thơm ngon, mát lạnh, làm dịu cơn khát ngay lập tức.",
           "price": 25000,
-          "image": "https://drive.google.com/file/d/1qRi9IcEKMCRdxw7FCajXM35mWkrTaf15/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1qRi9IcEKMCRdxw7FCajXM35mWkrTaf15"
         },
         {
           "id": 40,
           "name": "Bánh cheesecake",
           "description": "Bánh ngọt hấp dẫn, thơm lừng, phù hợp làm món tráng miệng nhẹ.",
           "price": 85000,
-          "image": "https://drive.google.com/file/d/1mn5washVgx1CfRq1HIet_uMkLjLZNNCc/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1mn5washVgx1CfRq1HIet_uMkLjLZNNCc"
         },
         {
           "id": 41,
           "name": "Trái cây ngũ vị",
           "description": "Combo các loại trái cây đặc biệt ngon miệng, thanh mát.",
           "price": 60000,
-          "image": "https://drive.google.com/file/d/1_uwEi9Ewb5jigRWkEbzBhlLUS4oI4Xr_/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1_uwEi9Ewb5jigRWkEbzBhlLUS4oI4Xr_"
         },
         {
           "id": 42,
           "name": "Kem sô cô la",
           "description": "Kem sô cô la thơm ngon, đậm đà, làm dịu mát cơ thể tức thì.",
           "price": 5000,
-          "image": "https://drive.google.com/file/d/1JDrA8EeLFrgCuNRoe_P0DrF73axV7YjC/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1JDrA8EeLFrgCuNRoe_P0DrF73axV7YjC"
         },
         {
           "id": 43,
           "name": "Bánh mochi",
           "description": "Bánh mochi mềm dẻo, hương vị đặc biệt, kết hợp giữa truyền thống và hiện đại.",
           "price": 45000,
-          "image": "https://drive.google.com/file/d/1YADLB4j5vBvTiFPg3qI1-U5qfhN9o9bd/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1YADLB4j5vBvTiFPg3qI1-U5qfhN9o9bd"
         },
         {
           "id": 44,
           "name": "Panna cotta",
           "description": "Panna cotta mịn màng, thơm ngon, vị ngọt dịu và béo ngậy.",
           "price": 34000,
-          "image": "https://drive.google.com/file/d/1sLftHq2aBRUTNQWgj9kOhEauEG7iuXNY/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1sLftHq2aBRUTNQWgj9kOhEauEG7iuXNY"
         }
       ]
     },
     {
       "name": "Món Phụ",
-      "image": "https://drive.google.com/file/d/1TqSOaJOerIPVW71uPZ5PPUi1tED2D_Qx/view?usp=sharing",
+      "image": "https://drive.google.com/uc?id=1TqSOaJOerIPVW71uPZ5PPUi1tED2D_Qx",
       "items": [
         {
           "id": 45,
           "name": "Khoai Tây Chiên",
           "description": "Khoai tây chiên với gia vị vừa ăn, dinh dưỡng.",
           "price": 25000,
-          "image": "https://drive.google.com/file/d/1V4CaK4mKYvxQj3L3m_kBd2yUIzZ2m_jZ/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1V4CaK4mKYvxQj3L3m_kBd2yUIzZ2m_jZ"
         },
         {
           "id": 46,
           "name": "Khoai Tây Sốt Phô Mai",
           "description": "Khoai sốt phô mai ngon ngọt hương thơm đậm vị.",
           "price": 35000,
-          "image": "https://drive.google.com/file/d/1BLO6Me8EEYhX47-FibYj_KH-5RAR2HfH/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1BLO6Me8EEYhX47-FibYj_KH-5RAR2HfH"
         },
         {
           "id": 47,
           "name": "Salad trộn",
           "description": "Salad bắp cải, rau củ với nước sốt chua ngọt.",
           "price": 30000,
-          "image": "https://drive.google.com/file/d/1TqSOaJOerIPVW71uPZ5PPUi1tED2D_Qx/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1TqSOaJOerIPVW71uPZ5PPUi1tED2D_Qx"
         },
         {
           "id": 48,
           "name": "Bánh mì phô mai tan chảy",
           "description": "Bánh mì kèm vị phô mai tan chảy trong miệng cực sảng khoái.",
           "price": 25000,
-          "image": "https://drive.google.com/file/d/1gWKStDovxUyzhWRUy7vVe77QN12sMgrB/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1gWKStDovxUyzhWRUy7vVe77QN12sMgrB"
         },
         {
           "id": 49,
           "name": "Cơm",
           "description": "Cơm ăn kèm theo giàu dinh dưỡng và chất đạm.",
           "price": 10000,
-          "image": "https://drive.google.com/file/d/1xMV4Kc5ou75iXIXlC1iIwWb10zEtvy9z/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1xMV4Kc5ou75iXIXlC1iIwWb10zEtvy9z"
         }
       ]
     },
     {
       "name": "Combo ưu đãi",
-      "image": "https://drive.google.com/file/d/1YcO1sEDgDtZ5dB8KuI-WNDlnoOFmUWOJ/view?usp=sharing",
+      "image": "https://drive.google.com/uc?id=1YcO1sEDgDtZ5dB8KuI-WNDlnoOFmUWOJ",
       "items": [
         {
           "id": 50,
           "name": "Combo 3 Gà rán",
           "description": "Combo 3 gà rán giòn rụm đậm đà hương vị với giá rẻ bất ngờ",
           "price": 99000,
-          "image": "https://drive.google.com/file/d/1YcO1sEDgDtZ5dB8KuI-WNDlnoOFmUWOJ/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1YcO1sEDgDtZ5dB8KuI-WNDlnoOFmUWOJ"
         },
         {
           "id": 51,
           "name": "Combo 2 Mì ý hải sản",
           "description": "Combo 2 Mì ý hải sản cho hai người ăn với giá ưu đãi đặc biệt",
           "price": 150000,
-          "image": "https://drive.google.com/file/d/1W9b6gOHG1aJWdSjRT5AOJzN38DJyVGoE/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1W9b6gOHG1aJWdSjRT5AOJzN38DJyVGoE"
         },
         {
           "id": 52,
           "name": "Combo 3 Burger Tôm",
           "description": "Combo 3 Burger tôm hương vị hải sản tôm vô cùng ngon miệng hoàn hảo.",
           "price": 169000,
-          "image": "https://drive.google.com/file/d/1jvmRFssCdwMz32y8z_rs-CM2AI879ZgC/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1jvmRFssCdwMz32y8z_rs-CM2AI879ZgC"
         },  
         {
           "id": 53,
           "name": "Combo 5 Burger cua",
           "description": "Combo 5 burger cua hương vị hải sản tươi sống, giá ưu đãi.",
           "price": 389000,
-          "image": "https://drive.google.com/file/d/1uGYfJxsYKfPu84m1BZhiQz7jOGeZDhru/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1uGYfJxsYKfPu84m1BZhiQz7jOGeZDhru"
         },
         {
           "id": 54,
           "name": "Combo 1 Mì ý sốt cà chua + 2 Gà rán sốt mật ong",
           "description": "Combo đầy dinh dưỡng, kèm mật ong ngọt ngào trong miệng.",
           "price": 119000,
-          "image": "https://drive.google.com/file/d/1b6K7GWtfsmAschu_vRX_Q5JqpWy0OP72/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1b6K7GWtfsmAschu_vRX_Q5JqpWy0OP72"
         },
         {
           "id": 55,
           "name": "Combo 2 Mì ý sốt bò bằm + 2 Gà rán sốt cay",
           "description": "Combo với hương vị thịt bò kèm với hương vị gà rán sốt cay cay giòn rụm, ngon sừng sựt.",
           "price": 115000,
-          "image": "https://drive.google.com/file/d/17ijq0Q_Yax_mgbrq3R7vgJrsQ-iHIThU/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=17ijq0Q_Yax_mgbrq3R7vgJrsQ-iHIThU"
         },
         {
           "id": 56,
           "name": "Combo 15 Gà rán sốt Kim Chi",
           "description": "Món gà rán sốt Kim Chi bao giờ cũng hot hòn họt, giá ưu đã vô cùng bất ngờ.",
           "price": 639000,
-          "image": "https://drive.google.com/file/d/1bH6Vs9OKCN4nysF6tScH9WTCZC1bzxfB/view?usp=sharing"
+          "image": "https://drive.google.com/uc?id=1bH6Vs9OKCN4nysF6tScH9WTCZC1bzxfB"
         }
       ]
     }
