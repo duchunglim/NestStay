@@ -5,6 +5,9 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import android.text.Editable;
+import android.text.Html;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -67,6 +72,105 @@ public class ReservationFragment extends Fragment {
         etNotes = view.findViewById(R.id.etNotes);
         btnConfirm = view.findViewById(R.id.btnConfirm);
 
+
+        // Initialize your TextInputLayouts
+        TextInputLayout textInputLayoutName = view.findViewById(R.id.textInputLayoutName);
+        TextInputLayout textInputLayoutPhone = view.findViewById(R.id.textInputLayoutPhone);
+        TextInputLayout textInputLayoutAddress = view.findViewById(R.id.textInputLayoutAddress);
+        TextInputLayout textInputLayoutEmail = view.findViewById(R.id.textInputLayoutEmail);
+
+        // Add TextWatcher để xử lý khi người dùng nhập kí tự trong edt và biến mất error
+        etName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Không cần làm gì trước khi text thay đổi
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Kiểm tra nếu tên trống
+                if (s.length() == 0) {
+                    textInputLayoutName.setErrorEnabled(true);
+                    textInputLayoutName.setError("Vui lòng nhập tên !");
+                } else {
+                    textInputLayoutName.setErrorEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Không cần làm gì sau khi text thay đổi
+            }
+        });
+
+
+        etPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Không cần làm gì trước khi text thay đổi
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Kiểm tra nếu số điện thoại không hợp lệ
+                if (s.length() < 9 || s.length() > 10 || !s.toString().startsWith("0")) {
+                    textInputLayoutPhone.setError("Số điện thoại tối thiểu 9 số và đúng định dạng !");
+                } else {
+                    textInputLayoutPhone.setErrorEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Không cần làm gì sau khi text thay đổi
+            }
+        });
+
+        etAddress.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Không cần làm gì trước khi text thay đổi
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Kiểm tra nếu địa chỉ trống
+                if (s.length() == 0) {
+                    textInputLayoutAddress.setError("Vui lòng nhập địa chỉ !");
+                } else {
+                    textInputLayoutAddress.setErrorEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Không cần làm gì sau khi text thay đổi
+            }
+        });
+
+        etEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Không cần làm gì trước khi text thay đổi
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Kiểm tra nếu email không hợp lệ
+                if (s.length() > 0 && !isValidEmail(s.toString())) {
+                    textInputLayoutEmail.setError("Vui lòng nhập email đúng định dạng !");
+                } else {
+                    textInputLayoutEmail.setErrorEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Không cần làm gì sau khi text thay đổi
+            }
+        });
+
+
         calendarView.setMinDate(System.currentTimeMillis() - 1000);
 
         // Đặt selectedDate mặc định là ngày hiện tại
@@ -109,7 +213,7 @@ public class ReservationFragment extends Fragment {
             if (!isOperatingHours(hourOfDay, minute)) {
                 timePicker.setCurrentHour(7); // Đặt lại giờ thành 7 AM
                 timePicker.setCurrentMinute(0);
-                Toast.makeText(getActivity(), "Cửa hàng hoạt động từ 7:00 AM đến 10:00 PM", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Cửa hàng hoạt động từ 7:00 AM đến 10:00 PM.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -156,6 +260,13 @@ public class ReservationFragment extends Fragment {
         number10.setOnClickListener(numberClickListener);
 
         btnConfirm.setOnClickListener(v -> {
+
+            textInputLayoutName.setError(null);
+            textInputLayoutPhone.setError(null);
+            textInputLayoutAddress.setError(null);
+            textInputLayoutEmail.setError(null);
+
+
             // Lấy thông tin nhập từ người dùng
             String name = etName.getText().toString().trim();
             String phone = etPhone.getText().toString().trim();
@@ -163,37 +274,44 @@ public class ReservationFragment extends Fragment {
             String email = etEmail.getText().toString().trim();
             String notes = etNotes.getText().toString().trim();
 
-            // Kiểm tra số lượng người được chọn
+            boolean hasError = false;
+
+            //Kiểm tra số lượng người
             if (numberOfPeople == 0) {
-                Toast.makeText(getActivity(), "Vui lòng chọn số lượng người!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Vui lòng chọn số lượng người !", Toast.LENGTH_SHORT).show();
                 return;
             }
             // Kiểm tra tên
             if (name.isEmpty()) {
-                Toast.makeText(getActivity(), "Vui lòng nhập tên!", Toast.LENGTH_SHORT).show();
+                textInputLayoutName.setErrorEnabled(true);
+                textInputLayoutName.setError("Vui lòng nhập tên !");
+                hasError = true;
                 return;
             }
             // Kiểm tra số điện thoại
             if (phone.isEmpty()) {
-                Toast.makeText(getActivity(), "Vui lòng nhập số điện thoại!", Toast.LENGTH_SHORT).show();
+                textInputLayoutPhone.setError("Vui lòng nhập số điện thoại !");
+                hasError = true;
                 return;
-            }
-            if (phone.length() < 9 || phone.length() > 10) {
-                Toast.makeText(getActivity(), "Số điện thoại tối thiểu 9 số!", Toast.LENGTH_SHORT).show();
+            } else if (phone.length() < 9 || phone.length() > 10|| !phone.toString().startsWith("0")) {
+                textInputLayoutPhone.setError("Số điện thoại tối thiểu 9 số và đúng định dạng !");
+                hasError = true;
                 return;
             }
             // Kiểm tra địa chỉ
             if (address.isEmpty()) {
-                Toast.makeText(getActivity(), "Vui lòng nhập địa chỉ!", Toast.LENGTH_SHORT).show();
+                textInputLayoutAddress.setError("Vui lòng nhập địa chỉ !");
+                hasError = true;
                 return;
             }
             // Kiểm tra email
             if (email.isEmpty()) {
-                Toast.makeText(getActivity(), "Vui lòng nhập email!", Toast.LENGTH_SHORT).show();
+                textInputLayoutEmail.setError("Vui lòng nhập email!");
+                hasError = true;
                 return;
-            }
-            if (!email.endsWith("@gmail.com")) {
-                Toast.makeText(getActivity(), "Vui lòng nhập email có đuôi '@gmail.com'", Toast.LENGTH_SHORT).show();
+            } else if (email.length() > 0 && !isValidEmail(email.toString())) {
+                textInputLayoutEmail.setError("Vui lòng nhập email đúng định dạng !");
+                hasError = true;
                 return;
             }
 
@@ -230,24 +348,45 @@ public class ReservationFragment extends Fragment {
             SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
             String date = sdfDate.format(selectedDateTime.getTime());
 
-            String reservationDetails = "Tên: " + name +
-                    "\nSố điện thoại: " + phone +
-                    "\nĐịa chỉ: " + address +
-                    "\nEmail: " + email +
-                    "\nNgày: " + date +
-                    "\nGiờ: " + time +
-                    "\nSố lượng người: " + numberOfPeople +
-                    "\nGhi chú: " + (notes.isEmpty() ? "Không có" : notes);
+            // Xây dựng chuỗi thông tin đặt bàn với định dạng HTML và xuống dòng
+            String reservationDetails =
+                    "<b>Tên:</b> " + name + "<br/>" +
+                    "<b>Số điện thoại:</b> " + phone + "<br/>" +
+                    "<b>Địa chỉ:</b> " + address + "<br/>" +
+                    "<b>Email:</b> " + email + "<br/>" +
+                    "<b>Ngày:</b> " + date + "<br/>" +
+                    "<b>Giờ:</b> " + time + "<br/>" +
+                    "<b>Số lượng người:</b> " + numberOfPeople + "<br/>" +
+                    "<b>Ghi chú:</b> " + (notes.isEmpty() ? "Không có" : notes);
 
-            // Hiển thị hộp thoại xác nhận đặt bàn
-            new AlertDialog.Builder(getActivity())
-                    .setTitle("Xác nhận đặt bàn")
-                    .setMessage(reservationDetails)
-                    .setPositiveButton("Xác nhận", (dialog, which) -> {
-                        Toast.makeText(getActivity(), "Chúc mừng bạn đã đặt bàn thành công", Toast.LENGTH_LONG).show();
-                    })
-                    .setNegativeButton("Hủy", null)
-                    .show();
+            // Tạo dialog tuỳ chỉnh từ custom_dialog.xml
+            View dialogView = inflater.inflate(R.layout.custom_dialog, null);
+            TextView dialogTitle = dialogView.findViewById(R.id.dialogTitle);
+            TextView dialogMessage = dialogView.findViewById(R.id.dialogMessage);
+            Button btnConfirmDialog = dialogView.findViewById(R.id.btnConfirmDialog);
+            Button btnCancelDialog = dialogView.findViewById(R.id.btnCancelDialog);
+
+            dialogTitle.setText("THÔNG TIN ĐẶT BÀN");
+            dialogMessage.setText(Html.fromHtml(reservationDetails));
+
+            // Xây dựng AlertDialog từ dialogView
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+            builder.setView(dialogView);
+
+            AlertDialog alertDialog = builder.create();
+
+            // Xử lý khi người dùng chọn Xác nhận
+            btnConfirmDialog.setOnClickListener(dialogButton -> {
+                alertDialog.dismiss(); // Đóng dialog khi người dùng chọn Xác nhận
+                Toast.makeText(getActivity(), "Đặt bàn thành công !", Toast.LENGTH_LONG).show();
+            });
+
+            // Xử lý khi người dùng chọn Hủy
+            btnCancelDialog.setOnClickListener(dialogButton -> {
+                alertDialog.dismiss(); // Đóng dialog khi người dùng chọn Hủy
+            });
+
+            alertDialog.show();
         });
 
 
@@ -283,5 +422,10 @@ public class ReservationFragment extends Fragment {
         return hourOfDay >= 7 && hourOfDay < 21; // Kiểm tra giờ có từ 7 đến 22 (10 PM)
     }
 
+    // Phương thức kiểm tra tính hợp lệ của email
+    private boolean isValidEmail(String email) {
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+        return email.matches(emailPattern);
+    }
 
 }

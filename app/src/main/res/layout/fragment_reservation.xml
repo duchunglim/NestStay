@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,6 +7,7 @@
 
     <!-- Title -->
     <TextView
+        android:id="@+id/tvx"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="Đặt bàn"
@@ -14,13 +15,15 @@
         android:background="#FFAF20"
         android:textStyle="bold"
         android:gravity="center"
-        android:layout_marginBottom="8dp"/>
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fillViewport="true"
         android:layout_weight="1"
+        android:layout_below="@id/tvx"
         tools:context=".ReservationFragment">
 
         <LinearLayout
@@ -229,6 +232,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/textInputLayoutName"
                 app:startIconDrawable="@drawable/baseline_person_24"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -243,11 +247,11 @@
                     android:inputType="text"
                     android:maxLength="20"
                     android:padding="12dp"/>
-
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/textInputLayoutPhone"
                 app:startIconDrawable="@drawable/baseline_local_phone_24"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -262,11 +266,11 @@
                     android:inputType="phone"
                     android:maxLength="10"
                     android:padding="12dp"/>
-
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/textInputLayoutAddress"
                 app:startIconDrawable="@drawable/baseline_add_location_alt_24"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -281,11 +285,11 @@
                     android:maxLength="30"
                     android:inputType="textPostalAddress"
                     android:padding="12dp"/>
-
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/textInputLayoutEmail"
                 app:startIconDrawable="@drawable/baseline_alternate_email_24"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -300,8 +304,8 @@
                     android:maxLength="20"
                     android:inputType="textEmailAddress"
                     android:padding="12dp"/>
-
             </com.google.android.material.textfield.TextInputLayout>
+
 
             <com.google.android.material.textfield.TextInputLayout
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -309,7 +313,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Thêm ghi chú"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="50dp">
 
                 <EditText
                     android:id="@+id/etNotes"
@@ -322,16 +326,19 @@
                     android:padding="12dp"/>
 
             </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Confirm Button -->
-            <Button
-                android:id="@+id/btnConfirm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Xác nhận đặt bàn"
-                android:background="@color/design_default_color_primary"
-                android:textColor="@android:color/white" />
-
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+
+    <!-- Button Confirm đặt bên dưới LinearLayout -->
+    <Button
+        android:id="@+id/btnConfirm"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:text="Xác nhận đặt bàn"
+        android:background="@drawable/rounded_corners1"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="10dp"/>
+
+</RelativeLayout >
