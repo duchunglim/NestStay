@@ -37,7 +37,6 @@ public class OrdersFragment extends Fragment {
                 JSONObject menuItem = menuArray.getJSONObject(i);
                 String categoryName = menuItem.getString("name");
                 String categoryImage = menuItem.getString("image");
-                Toast.makeText(getContext(), categoryImage, Toast.LENGTH_SHORT).show();
                 ProductCategory productCategory = new ProductCategory(categoryName, categoryImage);
                 ordersList.add(productCategory);
             }
