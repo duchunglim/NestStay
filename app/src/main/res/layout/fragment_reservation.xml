@@ -241,6 +241,7 @@
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:inputType="text"
+                    android:maxLength="20"
                     android:padding="12dp"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -259,6 +260,7 @@
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:inputType="phone"
+                    android:maxLength="10"
                     android:padding="12dp"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -276,6 +278,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
+                    android:maxLength="30"
                     android:inputType="textPostalAddress"
                     android:padding="12dp"/>
 
@@ -294,6 +297,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
+                    android:maxLength="20"
                     android:inputType="textEmailAddress"
                     android:padding="12dp"/>
 
