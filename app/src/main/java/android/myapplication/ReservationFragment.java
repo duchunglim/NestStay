@@ -31,6 +31,9 @@ public class ReservationFragment extends Fragment {
     private int numberOfPeople;
     private long selectedDate;
 
+    private boolean isOperatingHoursWarningShown = false;
+
+
     public ReservationFragment() {
         // Required empty public constructor
     }
@@ -65,33 +68,51 @@ public class ReservationFragment extends Fragment {
         btnConfirm = view.findViewById(R.id.btnConfirm);
 
         calendarView.setMinDate(System.currentTimeMillis() - 1000);
+
+        // Đặt selectedDate mặc định là ngày hiện tại
+        Calendar today = Calendar.getInstance();
+        selectedDate = today.getTimeInMillis();
+
         calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
             Calendar selectedCal = Calendar.getInstance();
-            selectedCal.set(year, month, dayOfMonth);
-            if (selectedCal.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()) {
-                calendarView.setDate(Calendar.getInstance().getTimeInMillis());
+            selectedCal.set(year, month, dayOfMonth, 0, 0, 0);
+            selectedCal.set(Calendar.MILLISECOND, 0);
+
+            // Lưu lại ngày được chọn
+            selectedDate = selectedCal.getTimeInMillis();
+
+
+            if (selectedCal.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
+                    selectedCal.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) {
+                timePicker.setCurrentHour(today.get(Calendar.HOUR_OF_DAY));
+                timePicker.setCurrentMinute(today.get(Calendar.MINUTE));
             } else {
-                selectedDate = selectedCal.getTimeInMillis();
+                timePicker.setCurrentHour(7);
+                timePicker.setCurrentMinute(0);
             }
 
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
             String date = sdf.format(selectedCal.getTime());
+            System.out.println("Ngày được chọn: " + date);
         });
+
 
 
 
         // Thiết lập TimePicker
-        timePicker.setIs24HourView(true); // Đặt 12 giờ AM/PM
-        timePicker.setCurrentHour(7); // Giờ bắt đầu là 7 AM
-        timePicker.setCurrentMinute(0); // Phút là 0 (7:00 AM)
+        timePicker.setIs24HourView(true); // Đặt chế độ 24 giờ
+        timePicker.setCurrentHour(Calendar.getInstance().get(Calendar.HOUR_OF_DAY)); // Đặt giờ hiện tại
+        timePicker.setCurrentMinute(Calendar.getInstance().get(Calendar.MINUTE)); // Đặt phút hiện tại
+
         timePicker.setOnTimeChangedListener((view12, hourOfDay, minute) -> {
-            // Kiểm tra nếu thời gian được chọn nằm ngoài khung giờ cho phép, hiển thị thông báo
+            // Kiểm tra nếu thời gian được chọn nằm ngoài giờ hoạt động
             if (!isOperatingHours(hourOfDay, minute)) {
                 timePicker.setCurrentHour(7); // Đặt lại giờ thành 7 AM
-                timePicker.setCurrentMinute(0); // Đặt lại phút thành 0
-                Toast.makeText(getActivity(), "Vui lòng chọn thời gian từ 7:00 AM đến 22:00 PM", Toast.LENGTH_SHORT).show();
+                timePicker.setCurrentMinute(0);
+                Toast.makeText(getActivity(), "Cửa hàng hoạt động từ 7:00 AM đến 10:00 PM", Toast.LENGTH_SHORT).show();
             }
         });
+
 
 
         View.OnClickListener numberClickListener = v -> {
@@ -135,34 +156,40 @@ public class ReservationFragment extends Fragment {
         number10.setOnClickListener(numberClickListener);
 
         btnConfirm.setOnClickListener(v -> {
+            // Lấy thông tin nhập từ người dùng
             String name = etName.getText().toString().trim();
             String phone = etPhone.getText().toString().trim();
             String address = etAddress.getText().toString().trim();
             String email = etEmail.getText().toString().trim();
             String notes = etNotes.getText().toString().trim();
 
+            // Kiểm tra số lượng người được chọn
             if (numberOfPeople == 0) {
-                Toast.makeText(getActivity(), "Vui lòng chọn số lượng người", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Vui lòng chọn số lượng người!", Toast.LENGTH_SHORT).show();
                 return;
             }
+            // Kiểm tra tên
             if (name.isEmpty()) {
-                Toast.makeText(getActivity(), "Vui lòng nhập tên", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Vui lòng nhập tên!", Toast.LENGTH_SHORT).show();
                 return;
             }
+            // Kiểm tra số điện thoại
             if (phone.isEmpty()) {
-                Toast.makeText(getActivity(), "Vui lòng nhập số điện thoại", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Vui lòng nhập số điện thoại!", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (phone.length() < 9 || phone.length() > 10) {
-                Toast.makeText(getActivity(), "Số điện thoại phải từ 9 đến 10 số", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Số điện thoại tối thiểu 9 số!", Toast.LENGTH_SHORT).show();
                 return;
             }
+            // Kiểm tra địa chỉ
             if (address.isEmpty()) {
-                Toast.makeText(getActivity(), "Vui lòng nhập địa chỉ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Vui lòng nhập địa chỉ!", Toast.LENGTH_SHORT).show();
                 return;
             }
+            // Kiểm tra email
             if (email.isEmpty()) {
-                Toast.makeText(getActivity(), "Vui lòng nhập email", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Vui lòng nhập email!", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (!email.endsWith("@gmail.com")) {
@@ -170,22 +197,38 @@ public class ReservationFragment extends Fragment {
                 return;
             }
 
-            // Lấy giá trị giờ và phút từ TimePicker
-            int hour = timePicker.getCurrentHour();
-            int minute = timePicker.getCurrentMinute();
+            // Lấy thời gian hiện tại
+            Calendar currentTime = Calendar.getInstance();
+            currentTime.add(Calendar.HOUR_OF_DAY, 1);
+            currentTime.set(Calendar.SECOND, 0);
+            currentTime.set(Calendar.MILLISECOND, 0);
 
+            // Tạo đối tượng Calendar từ ngày và giờ được chọn
+            Calendar selectedDateTime = Calendar.getInstance();
+            selectedDateTime.setTimeInMillis(selectedDate);
+            selectedDateTime.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
+            selectedDateTime.set(Calendar.MINUTE, timePicker.getCurrentMinute());
+            selectedDateTime.set(Calendar.SECOND, 0);
+            selectedDateTime.set(Calendar.MILLISECOND, 0);
 
-            // Tạo đối tượng Calendar và thiết lập giờ và phút từ TimePicker
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, hour);
-            calendar.set(Calendar.MINUTE, minute);
+            // In ra thông tin thời gian để debug
+            SimpleDateFormat sdfDebug = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
+            String currentTimeString = sdfDebug.format(currentTime.getTime());
+            String selectedDateTimeString = sdfDebug.format(selectedDateTime.getTime());
+            System.out.println("Thời gian hiện tại: " + currentTimeString);
+            System.out.println("Thời gian được chọn: " + selectedDateTimeString);
 
-            // Định dạng giờ theo AM/PM
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            String time = sdf.format(calendar.getTime());
+            // So sánh thời gian và ngày được chọn với thời gian hiện tại
+            if (selectedDateTime.before(currentTime)) {
+                Toast.makeText(getActivity(), "Bạn cần đặt bàn trước 1 giờ để sắp xếp chỗ!", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
+            // Xây dựng thông tin chi tiết đặt bàn
+            SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            String time = sdfTime.format(selectedDateTime.getTime());
             SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            String date = sdfDate.format(new Date(selectedDate));
+            String date = sdfDate.format(selectedDateTime.getTime());
 
             String reservationDetails = "Tên: " + name +
                     "\nSố điện thoại: " + phone +
@@ -196,6 +239,7 @@ public class ReservationFragment extends Fragment {
                     "\nSố lượng người: " + numberOfPeople +
                     "\nGhi chú: " + (notes.isEmpty() ? "Không có" : notes);
 
+            // Hiển thị hộp thoại xác nhận đặt bàn
             new AlertDialog.Builder(getActivity())
                     .setTitle("Xác nhận đặt bàn")
                     .setMessage(reservationDetails)
@@ -236,14 +280,8 @@ public class ReservationFragment extends Fragment {
 
     // Phương thức kiểm tra thời gian có nằm trong khoảng hoạt động từ 7 AM đến 10 PM hay không
     private boolean isOperatingHours(int hourOfDay, int minute) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        calendar.set(Calendar.MINUTE, minute);
-
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        return hour >= 7 && hour <= 22; // Kiểm tra giờ có từ 7 đến 22 (10 PM)
+        return hourOfDay >= 7 && hourOfDay < 21; // Kiểm tra giờ có từ 7 đến 22 (10 PM)
     }
-
 
 
 }
