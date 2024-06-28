@@ -3,13 +3,13 @@ package android.myapplication;
 public class Product {
     private String name;
     private String image;
-    private String price;
+    private int price;
     private String description;
 
     public Product() {
     }
 
-    public Product(String name, String image, String price, String description) {
+    public Product(String name, String image, int price, String description) {
         this.name = name;
         this.image = image;
         this.price = price;
@@ -24,7 +24,7 @@ public class Product {
         return image;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
     }
 
@@ -40,7 +40,7 @@ public class Product {
         this.image = image;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
