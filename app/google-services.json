@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "771579171221",
+    "firebase_url": "https://neststay-5bd4b-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "neststay-5bd4b",
+    "storage_bucket": "neststay-5bd4b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:771579171221:android:5196703b7ed9c5a85ea69c",
+        "android_client_info": {
+          "package_name": "android.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDr1ZJa09O3B85-d2467wJt8nX7XWfybI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
