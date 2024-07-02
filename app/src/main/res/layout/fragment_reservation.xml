@@ -337,7 +337,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:text="Xác nhận đặt bàn"
-        android:background="@drawable/rounded_corners1"
+        android:background="@drawable/background_button"
         android:textColor="@android:color/white"
         android:layout_marginBottom="10dp"/>
 
