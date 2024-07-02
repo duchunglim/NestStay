@@ -17,12 +17,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
 
     private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
 
     private TextInputEditText emailEditText, passwordEditText;
     private Button loginButton;
@@ -34,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Khởi tạo Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         // Khởi tạo các phần tử UI
         emailEditText = findViewById(R.id.emailEditText);
@@ -64,20 +71,42 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Kiểm tra email tồn tại trong Firebase Auth
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+        // Đoạn mã trong loginUser() của LoginActivity
+        mAuth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener(authResult -> {
                     // Đăng nhập thành công
                     Toast.makeText(LoginActivity.this, "Đăng nhập thành công.", Toast.LENGTH_SHORT).show();
-                    // Thực hiện các hành động tiếp theo sau khi đăng nhập thành công
-                    // Chuyển sang màn hình mới (ví dụ: MainActivity)
-                    Intent intent = new Intent(LoginActivity.this, SplashActivity.class);
-                    startActivity(intent);
-                    finish();
+
+                    // Lấy thông tin người dùng từ Realtime Database
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    if (user != null) {
+                        DatabaseReference userRef = mDatabase.child("users").child(user.getUid());
+                        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()) {
+                                    // Lấy thông tin người dùng từ dataSnapshot
+                                    String name = dataSnapshot.child("name").getValue(String.class);
+
+                                        // Chuyển thông tin người dùng sang HomeFragment
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        intent.putExtra("name", name);
+
+                                    startActivity(intent);
+                                    finish(); // Đóng LoginActivity để người dùng không thể quay lại màn hình đăng nhập
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Log.e(TAG, "Lỗi khi đọc dữ liệu từ Firebase", databaseError.toException());
+                            }
+                        });
+                    }
                 })
                 .addOnFailureListener(e -> {
                     // Xử lý lỗi
-                    Log.e("LoginActivity", "Đăng nhập thất bại", e); // Log lỗi để xem chi tiết trong Logcat
+                    Log.e(TAG, "Đăng nhập thất bại", e); // Log lỗi để xem chi tiết trong Logcat
 
                     // Kiểm tra xem lỗi có phải là FirebaseException và có chứa mã lỗi "INVALID_LOGIN_CREDENTIALS" không
                     if (e instanceof FirebaseException && e.getMessage().contains("INVALID_LOGIN_CREDENTIALS")) {
@@ -88,6 +117,7 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Đăng nhập thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+
 
     }
 
