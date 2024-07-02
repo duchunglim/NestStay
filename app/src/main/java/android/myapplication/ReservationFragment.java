@@ -20,6 +20,13 @@ import android.widget.Toast;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -72,12 +79,43 @@ public class ReservationFragment extends Fragment {
         etNotes = view.findViewById(R.id.etNotes);
         btnConfirm = view.findViewById(R.id.btnConfirm);
 
+        // Khởi tạo các phần tử UI cho cập nhật từ firebase xuống ứng dụng
+        EditText etName = view.findViewById(R.id.etName);
+        EditText etPhone = view.findViewById(R.id.etPhone);
+        EditText etEmail = view.findViewById(R.id.etEmail);
 
         // Initialize your TextInputLayouts
         TextInputLayout textInputLayoutName = view.findViewById(R.id.textInputLayoutName);
         TextInputLayout textInputLayoutPhone = view.findViewById(R.id.textInputLayoutPhone);
         TextInputLayout textInputLayoutAddress = view.findViewById(R.id.textInputLayoutAddress);
         TextInputLayout textInputLayoutEmail = view.findViewById(R.id.textInputLayoutEmail);
+
+
+        // Lấy thông tin người dùng từ Firebase Realtime Database để cập nhật name
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        String name = dataSnapshot.child("name").getValue(String.class);
+                        String phone = dataSnapshot.child("phone").getValue(String.class);
+                        String email = dataSnapshot.child("email").getValue(String.class);
+
+                        // Hiển thị thông tin người dùng
+                        etName.setText(name);
+                        etPhone.setText(phone);
+                        etEmail.setText(email);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Xử lý lỗi đọc dữ liệu
+                }
+            });
+        }
 
         // Add TextWatcher để xử lý khi người dùng nhập kí tự trong edt và biến mất error
         etName.addTextChangedListener(new TextWatcher() {

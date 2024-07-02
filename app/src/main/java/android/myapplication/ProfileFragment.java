@@ -44,7 +44,7 @@ public class ProfileFragment extends Fragment {
 
         // Xử lý sự kiện click vào nút "Đăng xuất"
         View logoutButton = view.findViewById(R.id.logout);
-        // Khởi tạo các phần tử UI trong fragment_home.xml liên kết top_nav
+        // Khởi tạo các phần tử UI
         TextView userNameTextView = view.findViewById(R.id.profile_name);
 
 

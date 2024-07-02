@@ -163,6 +163,7 @@ public class RegisterActivity extends AppCompatActivity {
                     textInputLayoutPhone.setError("Số điện thoại phải có số 0 ở đầu và từ 9-10 số.");
                 } else {
                     textInputLayoutPhone.setErrorEnabled(false);
+                    checkDuplicatePhone(phone);
                 }
             }
 
@@ -192,6 +193,24 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    private void checkDuplicatePhone(String phone) {
+        mDatabase.child("users").orderByChild("phone").equalTo(phone)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            textInputLayoutPhone.setError("Số điện thoại đã tồn tại.");
+                        } 
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.w(TAG, "checkDuplicatePhone:onCancelled", databaseError.toException());
+                    }
+                });
+    }
+
 
     private void registerUser() {
 
