@@ -44,7 +44,6 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:hint="Mật khẩu"
         android:layout_marginTop="8dp"
         app:startIconDrawable="@drawable/baseline_password_24">
@@ -57,6 +56,33 @@
             android:background="@drawable/edittext_background"
             android:padding="12dp"/>
     </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Layout cho checkbox "Nhớ mật khẩu" và text "Quên mật khẩu" -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="8dp">
+
+        <CheckBox
+            android:id="@+id/rememberMeCheckBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Nhớ mật khẩu" />
+
+        <TextView
+            android:id="@+id/forgotPasswordTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Quên mật khẩu"
+            android:textColor="#FFAF20"
+            android:gravity="end"
+            android:onClick="onForgotPasswordClick" />
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/loginButton"
