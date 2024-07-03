@@ -1,276 +1,283 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".OrderPaymentActivity">
+    android:fillViewport="true">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/topNav">
-        <androidx.cardview.widget.CardView
-            android:id="@+id/icon_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="50dp"
-            android:layout_margin="10dp">
-            <ImageView
-                android:padding="10dp"
-                android:background="#80000000"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/baseline_back_white_24"
-                android:scaleType="centerCrop"/>
-        </androidx.cardview.widget.CardView>
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="Giỏ hàng"
-            android:textColor="#000000"
-            android:textStyle="bold"
-            android:textSize="22sp" />
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-
-        <View
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_margin="10dp"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:orientation="horizontal">
-        <ImageView
-            android:id="@+id/locationIcon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/baseline_location_on_24"
-            android:layout_gravity="center"/>
-
-        <TextView
-            android:id="@+id/address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="69/68 D. Đặng Thùy Trâm, Phường 13, Bình Thạnh, TP.HCM"
-            android:textSize="16sp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"/>
-
-        <ImageView
-            android:id="@+id/editLocation"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
-            android:src="@drawable/baseline_arrow_forward_ios_24"
-            android:layout_gravity="center"/>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp">
-        <TextView
-            android:id="@+id/deliveryTimeLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Delivery time"
-            android:textSize="18sp"
-            android:textStyle="bold"/>
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-        <TextView
-            android:id="@+id/deliveryTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="15-30 min(s)"
-            android:layout_gravity="end"
-            android:textSize="16sp" />
-    </LinearLayout>
-
-    <RadioGroup
-        android:id="@+id/deliveryOptions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_below="@id/deliveryTime"
-        android:layout_marginTop="8dp"
-        android:layout_marginHorizontal="12dp">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context=".OrderPaymentActivity">
 
-        <RadioButton
-            android:id="@+id/priorityOption"
-            style="@style/RadioButtonAsButton"
+        <LinearLayout
+            android:id="@+id/topNav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ưu tiên"
-            android:layout_marginBottom="7dp"/>
+            android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/standardOption"
-            style="@style/RadioButtonAsButton"
+            <ImageView
+                android:id="@+id/icon_back"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:padding="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_arrow_back" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Giỏ hàng"
+                android:textColor="#000000"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <View
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="10dp" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tiêu chuẩn"
-            android:layout_marginBottom="7dp"/>
+            android:orientation="horizontal"
+            android:paddingVertical="15dp"
+            android:paddingHorizontal="10dp">
 
-        <RadioButton
-            android:id="@+id/scheduleOption"
-            style="@style/RadioButtonAsButton"
+            <ImageView
+                android:id="@+id/locationIcon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_location_on_24" />
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:text="69/68 D. Đặng Thùy Trâm, Phường 13, Bình Thạnh, TP.HCM"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/editLocation"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_arrow_forward_ios_24" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Lên lịch" />
-    </RadioGroup>
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp">
 
+            <TextView
+                android:id="@+id/deliveryTimeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delivery time"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginVertical="10dp"
-        android:layout_marginHorizontal="15dp">
-        <TextView
-            android:layout_width="wrap_content"
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/deliveryTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="15-30 min(s)"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/deliveryOptions"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Giỏ hàng"
-            android:textSize="18sp" />
+            android:layout_below="@id/deliveryTime"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            <RadioButton
+                android:id="@+id/priorityOption"
+                style="@style/RadioButtonAsButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="7dp"
+                android:text="Ưu tiên" />
 
-        <TextView
-            android:id="@+id/seeMenu"
-            android:layout_width="wrap_content"
+            <RadioButton
+                android:id="@+id/standardOption"
+                style="@style/RadioButtonAsButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="7dp"
+                android:text="Tiêu chuẩn" />
+
+            <RadioButton
+                android:id="@+id/scheduleOption"
+                style="@style/RadioButtonAsButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lên lịch" />
+        </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Xem thực đơn"
-            android:textSize="14sp"
-            android:textColor="#FFA500" />
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginVertical="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giỏ hàng"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/seeMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Xem thực đơn"
+                android:textColor="#FFA500"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/itemListRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginHorizontal="15dp" />
+
+        <LinearLayout
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginBottom="7dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/subtotalLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Tạm tính"
+                android:textSize="17sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/subtotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="34000đ"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginBottom="7dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/deliveryFeeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phí giao hàng"
+                android:textSize="17sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/deliveryFee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="14000đ"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginBottom="7dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/totalLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tổng"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="48000đ"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/nextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginVertical="10dp"
+            android:background="@drawable/background_button"
+            android:text="Thanh toán · 48000đ"
+            android:textColor="#FFFFFF"
+            android:textSize="19sp" />
+
     </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/itemListRecyclerView"
-        android:layout_marginHorizontal="15dp"
-        android:layout_marginBottom="10dp"/>
-
-    <LinearLayout
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="end"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="7dp">
-
-        <TextView
-            android:id="@+id/subtotalLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="Tạm tính"
-            android:textSize="17sp" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:id="@+id/subtotal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="34000đ"
-            android:textSize="16sp"
-            android:gravity="end"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="end"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="7dp">
-
-        <TextView
-            android:id="@+id/deliveryFeeLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Phí giao hàng"
-            android:textSize="17sp" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:id="@+id/deliveryFee"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="14000đ"
-            android:textSize="16sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="end"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="7dp">
-        <TextView
-            android:id="@+id/totalLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tổng"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:id="@+id/total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="48000đ"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-
-
-
-<Button
-    android:id="@+id/nextButton"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="10dp"
-    android:text="Thanh toán · 48000đ"
-    android:layout_marginHorizontal="15dp"
-    android:layout_marginVertical="10dp"
-    android:background="@drawable/background_button"
-    android:textColor="#FFFFFF"
-    android:textSize="19sp" />
-</LinearLayout>
+</ScrollView>

@@ -1,5 +1,6 @@
 package android.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -24,11 +26,14 @@ public class OrdersFragment extends Fragment {
     private RecyclerView recyclerView;
     private OrderAdapter orderAdapter;
     private List<ProductCategory> ordersList;
+    private ImageButton cartButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ordersList = new ArrayList<ProductCategory>();
+
+
         try {
             JSONObject obj = new JSONObject(loadJSONFromAsset());
             JSONArray menuArray = obj.getJSONArray("categories");
@@ -43,6 +48,8 @@ public class OrdersFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
     }
 
     private String loadJSONFromAsset() {
@@ -66,6 +73,11 @@ public class OrdersFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_orders, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
+        cartButton = view.findViewById(R.id.cart_icon);
+        cartButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), OrderPaymentActivity.class);
+            startActivity(intent);
+        });
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         orderAdapter = new OrderAdapter(ordersList);
         recyclerView.setAdapter(orderAdapter);

@@ -146,14 +146,5 @@
             android:text="Thên vào giỏ hàng"
             android:textColor="#FFFFFF"
             android:layout_marginRight="10dp"/>
-
-        <Button
-            android:id="@+id/buttonBuyNow"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/background_button"
-            android:text="Đặt ngay"
-            android:textColor="#FFFFFF" />
     </LinearLayout>
 </RelativeLayout>

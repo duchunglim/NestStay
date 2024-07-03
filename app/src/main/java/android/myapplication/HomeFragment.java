@@ -1,5 +1,6 @@
 package android.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,6 +18,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.w3c.dom.Text;
 
 public class HomeFragment extends Fragment {
 
@@ -40,7 +43,36 @@ public class HomeFragment extends Fragment {
 
         // Khởi tạo các phần tử UI trong fragment_home.xml liên kết top_nav
         TextView userNameTextView = view.findViewById(R.id.menu_top_nav).findViewById(R.id.user_name);
+        ImageView cartIcon = view.findViewById(R.id.menu_top_nav).findViewById(R.id.cart_icon);
+        TextView cartCount = view.findViewById(R.id.menu_top_nav).findViewById(R.id.cart_badge);
+        cartIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), OrderPaymentActivity.class);
+                startActivity(intent);
+            }
+        });
 
+        // Hiển thị số lượng sản phẩm trong giỏ hàng
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid()).child("cart");
+            cartRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        cartCount.setText(String.valueOf(dataSnapshot.getChildrenCount()));
+                    } else {
+                        cartCount.setText("0");
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Xử lý lỗi đọc dữ liệu
+                }
+            });
+        }
 
         viewPager2 = view.findViewById(R.id.ad_background);
         AdImageAdapter adapter = new AdImageAdapter(getContext(), adImages);
@@ -51,7 +83,6 @@ public class HomeFragment extends Fragment {
 
 
         // Lấy thông tin người dùng từ Firebase Realtime Database
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
             userRef.addListenerForSingleValueEvent(new ValueEventListener() {
