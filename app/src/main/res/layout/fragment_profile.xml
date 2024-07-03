@@ -298,10 +298,12 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingVertical="12dp"
+                android:onClick="logout"
                 android:gravity="center_vertical">
 
                 <ImageView
@@ -334,6 +336,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Phiên Bản 1.1 NS"
+        android:text="Phiên Bản 1.0"
         android:textColor="@android:color/white" />
 </LinearLayout>

@@ -24,7 +24,7 @@ public class SplashActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Thực hiện hành động khi người dùng nhấn vào nút
                 // Ví dụ: chuyển sang màn hình mới
-                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(intent);
 
                 // Kết thúc MainActivity để ngăn không cho quay lại

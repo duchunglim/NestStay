@@ -6,8 +6,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class HomeFragment extends Fragment {
 
@@ -29,12 +38,39 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        // Khởi tạo các phần tử UI trong fragment_home.xml liên kết top_nav
+        TextView userNameTextView = view.findViewById(R.id.menu_top_nav).findViewById(R.id.user_name);
+
+
         viewPager2 = view.findViewById(R.id.ad_background);
         AdImageAdapter adapter = new AdImageAdapter(getContext(), adImages);
         viewPager2.setAdapter(adapter);
 
         previousButton = view.findViewById(R.id.previousButton);
         nextButton = view.findViewById(R.id.nextButton);
+
+
+        // Lấy thông tin người dùng từ Firebase Realtime Database
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        String name = dataSnapshot.child("name").getValue(String.class);
+
+                        // Hiển thị thông tin người dùng
+                        userNameTextView.setText(name);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Xử lý lỗi đọc dữ liệu
+                }
+            });
+        }
 
         // Handle previous button click
         previousButton.setOnClickListener(new View.OnClickListener() {

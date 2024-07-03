@@ -20,6 +20,13 @@ import android.widget.Toast;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -72,12 +79,43 @@ public class ReservationFragment extends Fragment {
         etNotes = view.findViewById(R.id.etNotes);
         btnConfirm = view.findViewById(R.id.btnConfirm);
 
+        // Khởi tạo các phần tử UI cho cập nhật từ firebase xuống ứng dụng
+        EditText etName = view.findViewById(R.id.etName);
+        EditText etPhone = view.findViewById(R.id.etPhone);
+        EditText etEmail = view.findViewById(R.id.etEmail);
 
         // Initialize your TextInputLayouts
         TextInputLayout textInputLayoutName = view.findViewById(R.id.textInputLayoutName);
         TextInputLayout textInputLayoutPhone = view.findViewById(R.id.textInputLayoutPhone);
         TextInputLayout textInputLayoutAddress = view.findViewById(R.id.textInputLayoutAddress);
         TextInputLayout textInputLayoutEmail = view.findViewById(R.id.textInputLayoutEmail);
+
+
+        // Lấy thông tin người dùng từ Firebase Realtime Database để cập nhật name
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        String name = dataSnapshot.child("name").getValue(String.class);
+                        String phone = dataSnapshot.child("phone").getValue(String.class);
+                        String email = dataSnapshot.child("email").getValue(String.class);
+
+                        // Hiển thị thông tin người dùng
+                        etName.setText(name);
+                        etPhone.setText(phone);
+                        etEmail.setText(email);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Xử lý lỗi đọc dữ liệu
+                }
+            });
+        }
 
         // Add TextWatcher để xử lý khi người dùng nhập kí tự trong edt và biến mất error
         etName.addTextChangedListener(new TextWatcher() {
@@ -91,7 +129,7 @@ public class ReservationFragment extends Fragment {
                 // Kiểm tra nếu tên trống
                 if (s.length() == 0) {
                     textInputLayoutName.setErrorEnabled(true);
-                    textInputLayoutName.setError("Vui lòng nhập tên !");
+                    textInputLayoutName.setError("Vui lòng nhập tên.");
                 } else {
                     textInputLayoutName.setErrorEnabled(false);
                 }
@@ -114,7 +152,7 @@ public class ReservationFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // Kiểm tra nếu số điện thoại không hợp lệ
                 if (s.length() < 9 || s.length() > 10 || !s.toString().startsWith("0")) {
-                    textInputLayoutPhone.setError("Số điện thoại tối thiểu 9 số và đúng định dạng !");
+                    textInputLayoutPhone.setError("Số điện thoại phải có số 0 ở đầu và tối thiểu 9 số.");
                 } else {
                     textInputLayoutPhone.setErrorEnabled(false);
                 }
@@ -136,7 +174,7 @@ public class ReservationFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // Kiểm tra nếu địa chỉ trống
                 if (s.length() == 0) {
-                    textInputLayoutAddress.setError("Vui lòng nhập địa chỉ !");
+                    textInputLayoutAddress.setError("Vui lòng nhập địa chỉ.");
                 } else {
                     textInputLayoutAddress.setErrorEnabled(false);
                 }
@@ -158,7 +196,7 @@ public class ReservationFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // Kiểm tra nếu email không hợp lệ
                 if (s.length() > 0 && !isValidEmail(s.toString())) {
-                    textInputLayoutEmail.setError("Vui lòng nhập email đúng định dạng !");
+                    textInputLayoutEmail.setError("Vui lòng nhập email đúng định dạng.");
                 } else {
                     textInputLayoutEmail.setErrorEnabled(false);
                 }
@@ -278,39 +316,43 @@ public class ReservationFragment extends Fragment {
 
             //Kiểm tra số lượng người
             if (numberOfPeople == 0) {
-                Toast.makeText(getActivity(), "Vui lòng chọn số lượng người !", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Vui lòng chọn số lượng người.", Toast.LENGTH_SHORT).show();
                 return;
             }
             // Kiểm tra tên
             if (name.isEmpty()) {
                 textInputLayoutName.setErrorEnabled(true);
-                textInputLayoutName.setError("Vui lòng nhập tên !");
+                textInputLayoutName.setError("Vui lòng nhập tên.");
+                hasError = true;
+                return;
+            } else if (name.length() < 3) {
+                textInputLayoutName.setError("Tên tối thiểu 3 kí tự.");
                 hasError = true;
                 return;
             }
             // Kiểm tra số điện thoại
             if (phone.isEmpty()) {
-                textInputLayoutPhone.setError("Vui lòng nhập số điện thoại !");
+                textInputLayoutPhone.setError("Vui lòng nhập số điện thoại.");
                 hasError = true;
                 return;
             } else if (phone.length() < 9 || phone.length() > 10|| !phone.toString().startsWith("0")) {
-                textInputLayoutPhone.setError("Số điện thoại tối thiểu 9 số và đúng định dạng !");
+                textInputLayoutPhone.setError("Số điện thoại tối thiểu 9 số và đúng định dạng.");
                 hasError = true;
                 return;
             }
             // Kiểm tra địa chỉ
             if (address.isEmpty()) {
-                textInputLayoutAddress.setError("Vui lòng nhập địa chỉ !");
+                textInputLayoutAddress.setError("Vui lòng nhập địa chỉ.");
                 hasError = true;
                 return;
             }
             // Kiểm tra email
             if (email.isEmpty()) {
-                textInputLayoutEmail.setError("Vui lòng nhập email!");
+                textInputLayoutEmail.setError("Vui lòng nhập email.");
                 hasError = true;
                 return;
             } else if (email.length() > 0 && !isValidEmail(email.toString())) {
-                textInputLayoutEmail.setError("Vui lòng nhập email đúng định dạng !");
+                textInputLayoutEmail.setError("Vui lòng nhập email đúng định dạng.");
                 hasError = true;
                 return;
             }
@@ -338,7 +380,7 @@ public class ReservationFragment extends Fragment {
 
             // So sánh thời gian và ngày được chọn với thời gian hiện tại
             if (selectedDateTime.before(currentTime)) {
-                Toast.makeText(getActivity(), "Bạn cần đặt bàn trước 1 giờ để sắp xếp chỗ!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Bạn cần đặt bàn trước 1 giờ để sắp xếp chỗ.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -378,7 +420,7 @@ public class ReservationFragment extends Fragment {
             // Xử lý khi người dùng chọn Xác nhận
             btnConfirmDialog.setOnClickListener(dialogButton -> {
                 alertDialog.dismiss(); // Đóng dialog khi người dùng chọn Xác nhận
-                Toast.makeText(getActivity(), "Đặt bàn thành công !", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Đặt bàn thành công.", Toast.LENGTH_LONG).show();
             });
 
             // Xử lý khi người dùng chọn Hủy
