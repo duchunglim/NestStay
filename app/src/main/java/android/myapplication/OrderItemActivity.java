@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,17 +35,20 @@ public class OrderItemActivity extends AppCompatActivity {
     private List<Product> productList;
     private String categoryName;
     private ImageButton cartButton;
+    private ImageView backButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_item);
         categoryName = getIntent().getStringExtra("productCategory");
 
+        backButton = findViewById(R.id.icon_back);
         cartButton = findViewById(R.id.cart_icon);
         cartButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, OrderPaymentActivity.class);
             startActivity(intent);
         });
+        backButton.setOnClickListener(v -> finish());
 
         // Set the category name
         TextView categoryTitle = findViewById(R.id.categoryTitle);

@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +24,7 @@ import java.util.List;
 public class OrderPaymentActivity extends AppCompatActivity {
     ImageView backButton;
     RecyclerView recyclerView;
+    TextView seeMenu;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private OrderPaymentAdapter orderPaymentAdapter;
@@ -35,6 +39,15 @@ public class OrderPaymentActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.itemListRecyclerView);
         backButton = findViewById(R.id.icon_back);
+        seeMenu = findViewById(R.id.seeMenu);
+
+        seeMenu.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("fragment_to_load", "orders");
+            startActivity(intent);
+            finish();
+        });
+
         backButton.setOnClickListener(v -> finish());
 
         orderPaymentAdapter = new OrderPaymentAdapter(new ArrayList<>());

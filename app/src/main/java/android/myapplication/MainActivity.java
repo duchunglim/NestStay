@@ -18,12 +18,24 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
-        // Set default fragment
-        if (savedInstanceState == null) {
-            loadFragment(new HomeFragment());
-            bottomNavigationView.setSelectedItemId(R.id.nav_home);
+        // Check if intent has extras indicating which fragment to load
+        if (getIntent().hasExtra("fragment_to_load")) {
+            String fragmentToLoad = getIntent().getStringExtra("fragment_to_load");
+
+            // Load the appropriate fragment based on the extra passed
+            if ("orders".equals(fragmentToLoad)) {
+                loadFragment(new OrdersFragment());
+                bottomNavigationView.setSelectedItemId(R.id.nav_orders);
+            }
+        } else {
+            // Set default fragment
+            if (savedInstanceState == null) {
+                loadFragment(new HomeFragment());
+                bottomNavigationView.setSelectedItemId(R.id.nav_home);
+            }
         }
     }
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
