@@ -33,7 +33,7 @@
                     android:id="@+id/icon_back"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="#FFAF20"
+                    android:background="#80000000"
                     android:padding="10dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/baseline_back_white_24" />
@@ -108,6 +108,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 android:text="1" />
 
             <androidx.cardview.widget.CardView
@@ -143,7 +145,7 @@
             android:background="@drawable/background_button"
             android:text="Thên vào giỏ hàng"
             android:textColor="#FFFFFF"
-            android:layout_marginRight="20dp"/>
+            android:layout_marginRight="10dp"/>
 
         <Button
             android:id="@+id/buttonBuyNow"

@@ -22,7 +22,7 @@
                 android:background="#80000000"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/baseline_arrow_back_24"
+                android:src="@drawable/baseline_back_white_24"
                 android:scaleType="centerCrop"/>
         </androidx.cardview.widget.CardView>
         <View
@@ -37,16 +37,16 @@
             android:gravity="center"
             android:text="Giỏ hàng"
             android:textColor="#000000"
+            android:textStyle="bold"
             android:textSize="22sp" />
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"/>
 
-        <androidx.cardview.widget.CardView
+        <View
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:cardCornerRadius="50dp"
             android:layout_margin="10dp"/>
     </LinearLayout>
     <LinearLayout
@@ -67,12 +67,14 @@
             android:layout_height="wrap_content"
             android:text="69/68 D. Đặng Thùy Trâm, Phường 13, Bình Thạnh, TP.HCM"
             android:textSize="16sp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_weight="1"/>
 
         <ImageView
             android:id="@+id/editLocation"
             android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
             android:src="@drawable/baseline_arrow_forward_ios_24"
             android:layout_gravity="center"/>
 
@@ -82,7 +84,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp">
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
         <TextView
             android:id="@+id/deliveryTimeLabel"
             android:layout_width="wrap_content"
@@ -100,7 +103,7 @@
             android:layout_height="wrap_content"
             android:text="15-30 min(s)"
             android:layout_gravity="end"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
     <RadioGroup
@@ -141,11 +144,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="15dp">
+        android:layout_marginVertical="10dp"
+        android:layout_marginHorizontal="15dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Your items"
+            android:text="Giỏ hàng"
             android:textSize="18sp" />
 
         <View
@@ -157,8 +161,8 @@
             android:id="@+id/seeMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="See menu"
-            android:textSize="17sp"
+            android:text="Xem thực đơn"
+            android:textSize="14sp"
             android:textColor="#FFA500" />
     </LinearLayout>
 
@@ -176,11 +180,12 @@
         android:layout_gravity="end"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="7dp">
+
         <TextView
             android:id="@+id/subtotalLabel"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Subtotal"
+            android:layout_height="match_parent"
+            android:text="Tạm tính"
             android:textSize="17sp" />
 
         <View
@@ -193,7 +198,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="34000đ"
-            android:textSize="17sp"
+            android:textSize="16sp"
             android:gravity="end"/>
     </LinearLayout>
 
@@ -204,11 +209,12 @@
         android:layout_gravity="end"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="7dp">
+
         <TextView
             android:id="@+id/deliveryFeeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Delivery fee"
+            android:text="Phí giao hàng"
             android:textSize="17sp" />
 
         <View
@@ -221,7 +227,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="14000đ"
-            android:textSize="17sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -235,7 +241,7 @@
             android:id="@+id/totalLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Total"
+            android:text="Tổng"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -260,10 +266,11 @@
     android:id="@+id/nextButton"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="Next · 48000đ"
-    android:layout_margin="16dp"
-    android:backgroundTint="#FFA500"
+    android:padding="10dp"
+    android:text="Thanh toán · 48000đ"
+    android:layout_marginHorizontal="15dp"
+    android:layout_marginVertical="10dp"
+    android:background="@drawable/background_button"
     android:textColor="#FFFFFF"
-    android:textSize="17sp" />
-
+    android:textSize="19sp" />
 </LinearLayout>

@@ -20,7 +20,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:padding="10dp"
-            android:src="@drawable/ic_arrow_back" />
+            android:src="@drawable/baseline_back_white_24" />
 
         <TextView
             android:layout_width="0dp"
@@ -28,6 +28,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Đặt món"
+            android:textColor="#ffffff"
             android:textSize="23sp"
             android:textStyle="bold" />
 
@@ -37,13 +38,14 @@
             android:layout_height="35dp"
             android:background="#00000000"
             android:scaleType="centerCrop"
-            android:src="@drawable/baseline_shopping_cart_24" />
+            android:src="@drawable/baseline_shopping_cart_24_white" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/categoryTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="start"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="15dp"
         android:text="Category"
