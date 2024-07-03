@@ -64,7 +64,7 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.Orde
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), ItemDescriptionActivity.class);
                 intent.putExtra("name", orderItem.getName());
-                intent.putExtra("price", orderItem.getPrice() + "đ");
+                intent.putExtra("price", orderItem.getPrice()+"");
                 intent.putExtra("image", orderItem.getImage());
                 intent.putExtra("description", orderItem.getDescription());
 

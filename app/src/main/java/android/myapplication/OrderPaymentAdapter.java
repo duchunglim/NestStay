@@ -30,8 +30,8 @@ public class OrderPaymentAdapter extends RecyclerView.Adapter<OrderPaymentAdapte
     public void onBindViewHolder(@NonNull OrderPaymentViewHolder holder, int position) {
         CartProduct orderItem = orderItemList.get(position);
         holder.productName.setText(orderItem.getName());
-        holder.productPrice.setText(orderItem.getPrice());
-        holder.productQuantity.setText(orderItem.getQuantity());
+        holder.productPrice.setText(orderItem.getPrice()+"đ");
+        holder.productQuantity.setText(orderItem.getQuantity() + "x");
 
         holder.itemView.setOnClickListener(v -> {
             // set item click to show product detail
