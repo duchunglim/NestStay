@@ -48,8 +48,6 @@ public class ItemDescriptionActivity extends AppCompatActivity {
         productPrice = findViewById(R.id.itemPrice);
         buttonBuyNow = findViewById(R.id.buttonBuyNow);
 
-
-
         String productName = getIntent().getStringExtra("name");
         String productDescription = getIntent().getStringExtra("description");
         String productPrice = getIntent().getStringExtra("price");
@@ -64,38 +62,19 @@ public class ItemDescriptionActivity extends AppCompatActivity {
         this.productDescription.setText(productDescription);
         this.productPrice.setText(productPrice);
 
-        FirebaseUser user = mAuth.getCurrentUser();
-        String userId = user.getUid();
-        DatabaseReference itemRef = mDatabase.child("users").child(userId).child("cart").child(productName);
-        //get item quantity from database if item exists in the cart
-        itemRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    String existingQuantityStr = dataSnapshot.child("quantity").getValue(String.class);
-                    textViewQuantity.setText(existingQuantityStr);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Handle possible errors
-                Toast.makeText(ItemDescriptionActivity.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
         if (productImage != null && !productImage.isEmpty()) {
             Picasso.get()
                     .load(productImage)
-                    .error(R.drawable.placeholder)
+                    .error(R.drawable.placeholder) // Placeholder image if loading fails
                     .into(this.productImage, new Callback() {
                         @Override
                         public void onSuccess() {
+                            // Image loaded successfully
                         }
 
                         @Override
                         public void onError(Exception e) {
+                            // Handle error (e.g., log, show placeholder)
                             e.printStackTrace();
                         }
                     });
@@ -104,29 +83,104 @@ public class ItemDescriptionActivity extends AppCompatActivity {
             this.productImage.setImageResource(R.drawable.placeholder);
         }
 
-        if (textViewQuantity.getText() != null && textViewQuantity.getText().toString().equals("1")) {
-            buttonDecrease.setClickable(false);
+        //check if item exists in cart and update the quantity accordingly
+        if (mAuth != null) {
+            FirebaseUser user = mAuth.getCurrentUser();
+            if (user != null) {
+                String userId = user.getUid();
+                String itemName = productName;
+
+                // Path to the specific item in the cart
+                DatabaseReference itemRef = mDatabase.child("users").child(userId).child("cart").child(itemName);
+                itemRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            // Item exists in the cart, update the quantity
+                            String existingQuantityStr = dataSnapshot.child("quantity").getValue(String.class);
+                            textViewQuantity.setText(existingQuantityStr);
+                            // Make the decrease button clickable since item is in the cart
+                            buttonDecrease.setEnabled(true);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Handle possible errors
+                        Toast.makeText(ItemDescriptionActivity.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                // Handle the case when the user is not logged in
+                Toast.makeText(ItemDescriptionActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
+            }
         } else {
-            buttonDecrease.setClickable(true);
+            // Handle the case when FirebaseAuth is not initialized
+            Toast.makeText(ItemDescriptionActivity.this, "FirebaseAuth not initialized", Toast.LENGTH_SHORT).show();
         }
+
+
+
+        // Initially set the decrease button to be unclickable
+        buttonDecrease.setEnabled(false);
 
         buttonIncrease.setOnClickListener(v -> {
             int quantity = Integer.parseInt(textViewQuantity.getText().toString());
             quantity++;
             textViewQuantity.setText(String.valueOf(quantity));
-            if (textViewQuantity.getText() != null && textViewQuantity.getText().toString().equals("1")) {
-                buttonDecrease.setClickable(false);
-            } else {
-                buttonDecrease.setClickable(true);
-            }
+            // Make the decrease button clickable when quantity is more than 1
+            buttonDecrease.setEnabled(true);
         });
 
         buttonDecrease.setOnClickListener(v -> {
-            int quantity = Integer.parseInt(textViewQuantity.getText().toString());
-            if (quantity > 0) {
-                quantity--;
-                textViewQuantity.setText(String.valueOf(quantity));
+            // Check if the item exists in the cart before decreasing the quantity
+            if (mAuth != null) {
+                FirebaseUser user = mAuth.getCurrentUser();
+                if (user != null) {
+                    String userId = user.getUid();
+                    String itemName = productName;
+
+                    // Path to the specific item in the cart
+                    DatabaseReference itemRef = mDatabase.child("users").child(userId).child("cart").child(itemName);
+                    itemRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                // Item exists in the cart, make the decrease button clickable
+                                buttonDecrease.setEnabled(true);
+                                int quantity = Integer.parseInt(textViewQuantity.getText().toString());
+                                if (quantity > 0) {
+                                    quantity--;
+                                    textViewQuantity.setText(String.valueOf(quantity));
+                                }
+                            } else {
+                                // if the ttem does not exist in the cart, decrease button unclickable if quantity is 1
+                                int quantity = Integer.parseInt(textViewQuantity.getText().toString());
+                                if (quantity > 1) {
+                                    quantity--;
+                                    textViewQuantity.setText(String.valueOf(quantity));
+                                }
+
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            // Handle possible errors
+                            Toast.makeText(ItemDescriptionActivity.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    // Handle the case when the user is not logged in
+                    Toast.makeText(ItemDescriptionActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                // Handle the case when FirebaseAuth is not initialized
+                Toast.makeText(ItemDescriptionActivity.this, "FirebaseAuth not initialized", Toast.LENGTH_SHORT).show();
             }
+
+
         });
 
         iconBack.setOnClickListener(v -> {
@@ -138,22 +192,25 @@ public class ItemDescriptionActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-
         buttonAddToCart.setOnClickListener(v -> {
+            FirebaseUser user = mAuth.getCurrentUser();
             // Ensure Firebase Auth is initialized
             if (mAuth != null) {
                 if (user != null) {
+                    String userId = user.getUid();
                     String itemName = productName;
                     String itemDesc = productDescription;
                     String itemPrice = productPrice;
                     String itemImage = productImage;
                     String itemQuantity = textViewQuantity.getText().toString();
 
+                    // Path to the specific item in the cart
+                    DatabaseReference itemRef = mDatabase.child("users").child(userId).child("cart").child(itemName);
+
                     itemRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
-                                // Item exists in the cart, update the quantity
                                 int newQuantity = Integer.parseInt(itemQuantity);
 
                                 // If the new quantity is zero, remove the item from the cart
@@ -161,7 +218,7 @@ public class ItemDescriptionActivity extends AppCompatActivity {
                                     itemRef.removeValue().addOnCompleteListener(task -> {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(ItemDescriptionActivity.this, "Item removed from cart", Toast.LENGTH_SHORT).show();
-                                            buttonDecrease.setClickable(false);
+                                            buttonDecrease.setEnabled(false);
                                         } else {
                                             Toast.makeText(ItemDescriptionActivity.this, "Failed to remove item from cart", Toast.LENGTH_SHORT).show();
                                         }
@@ -173,7 +230,7 @@ public class ItemDescriptionActivity extends AppCompatActivity {
                                                 if (task.isSuccessful()) {
                                                     Toast.makeText(ItemDescriptionActivity.this, "Item quantity updated in cart", Toast.LENGTH_SHORT).show();
                                                     // Make the decrease button clickable since item is in the cart
-                                                    buttonDecrease.setClickable(true);
+                                                    buttonDecrease.setEnabled(true);
                                                 } else {
                                                     Toast.makeText(ItemDescriptionActivity.this, "Failed to update item quantity", Toast.LENGTH_SHORT).show();
                                                 }
@@ -194,7 +251,7 @@ public class ItemDescriptionActivity extends AppCompatActivity {
                                             if (task.isSuccessful()) {
                                                 Toast.makeText(ItemDescriptionActivity.this, "Item added to cart", Toast.LENGTH_SHORT).show();
                                                 // Make the decrease button clickable since item is now in the cart
-                                                buttonDecrease.setClickable(true);
+                                                buttonDecrease.setEnabled(true);
                                             } else {
                                                 Toast.makeText(ItemDescriptionActivity.this, "Failed to add item to cart", Toast.LENGTH_SHORT).show();
                                             }
