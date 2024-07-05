@@ -88,9 +88,9 @@ public class LoginActivity extends AppCompatActivity {
                                     // Lấy thông tin người dùng từ dataSnapshot
                                     String name = dataSnapshot.child("name").getValue(String.class);
 
-                                        // Chuyển thông tin người dùng sang HomeFragment
-                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                        intent.putExtra("name", name);
+                                    // Chuyển thông tin người dùng sang HomeFragment
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    intent.putExtra("name", name);
 
                                     startActivity(intent);
                                     finish(); // Đóng LoginActivity để người dùng không thể quay lại màn hình đăng nhập
@@ -125,4 +125,10 @@ public class LoginActivity extends AppCompatActivity {
     public void onRegisterClick(View view) {
         startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
     }
+
+    public void openForgotPasswordActivity(View view) {
+        Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+        startActivity(intent);
+    }
+
 }

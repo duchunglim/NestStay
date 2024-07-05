@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -36,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText emailEditText, passwordEditText, confirmPasswordEditText, nameEditText, phoneEditText;
     private TextInputLayout textInputLayoutEmail, textInputLayoutPassword, textInputLayoutConfirmPassword, textInputLayoutName, textInputLayoutPhone;
     private Button registerButton;
+    private ImageView icon_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
         nameEditText = findViewById(R.id.nameEditText);
         phoneEditText = findViewById(R.id.phoneEditText);
         registerButton = findViewById(R.id.registerButton);
+        icon_back = findViewById(R.id.icon_back);
 
         // Thiết lập TextWatchers cho các trường EditText
         setupTextWatchers();
@@ -68,6 +71,13 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 registerUser();
+            }
+        });
+
+        icon_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }

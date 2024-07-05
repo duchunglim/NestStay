@@ -73,14 +73,15 @@
             android:text="Nhớ mật khẩu" />
 
         <TextView
-            android:id="@+id/forgotPasswordTextView"
+            android:id="@+id/textViewForgotPassword"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Quên mật khẩu"
             android:textColor="#FFAF20"
-            android:gravity="end"
-            android:onClick="onForgotPasswordClick" />
+            android:onClick="openForgotPasswordActivity"
+            android:gravity="end"/>
+
     </LinearLayout>
 
 
@@ -92,7 +93,6 @@
         android:textSize="18dp"
         android:textColor="@color/white"
         android:background="@drawable/button_background"
-        android:layout_marginTop="16dp"
         android:drawableEnd="@drawable/next_iconn"
         android:gravity="center" />
 
@@ -155,14 +155,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical|center_horizontal"
-        android:layout_marginTop="40dp">
+        android:layout_marginTop="10dp">
 
         <!-- TextView thứ nhất: Bạn chưa có tài khoản? -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bạn chưa có tài khoản?"
-            android:gravity="center" />
+            android:gravity="center"
+            android:text="Bạn chưa có tài khoản?" />
 
         <!-- TextView thứ hai: Đăng ký -->
         <TextView
