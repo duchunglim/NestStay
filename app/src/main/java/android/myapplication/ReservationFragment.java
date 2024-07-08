@@ -421,6 +421,20 @@ public class ReservationFragment extends Fragment {
             btnConfirmDialog.setOnClickListener(dialogButton -> {
                 alertDialog.dismiss(); // Đóng dialog khi người dùng chọn Xác nhận
                 Toast.makeText(getActivity(), "Đặt bàn thành công.", Toast.LENGTH_LONG).show();
+                // Gửi thông tin đặt bàn lên Firebase Realtime Database của người dùng
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                if (currentUser != null) {
+                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUser.getUid());
+                    DatabaseReference reservationRef = userRef.child("reservations").push();
+                    reservationRef.child("name").setValue(name);
+                    reservationRef.child("phone").setValue(phone);
+                    reservationRef.child("address").setValue(address);
+                    reservationRef.child("email").setValue(email);
+                    reservationRef.child("date").setValue(date);
+                    reservationRef.child("time").setValue(time);
+                    reservationRef.child("numberOfPeople").setValue(numberOfPeople);
+                    reservationRef.child("notes").setValue(notes);
+                }
             });
 
             // Xử lý khi người dùng chọn Hủy

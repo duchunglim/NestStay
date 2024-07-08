@@ -15,6 +15,7 @@
         android:background="#FFAF20"
         android:textStyle="bold"
         android:gravity="center"
+        android:textColor="@color/white"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 

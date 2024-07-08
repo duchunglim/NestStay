@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -14,6 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NestStay"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDdy39rqBYlG98-FE1WWG3znuvzlQhqV7w"/>
+        <activity
+            android:name=".OrderPaymentActivity"
+            android:exported="false" />
         <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
@@ -24,7 +32,7 @@
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".OrderPaymentActivity"
+            android:name=".AddressActivity"
             android:exported="false" />
         <activity
             android:name=".ItemDescriptionActivity"
