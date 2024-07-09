@@ -54,7 +54,9 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:background="@drawable/edittext_background"
-            android:padding="12dp"/>
+            android:padding="12dp"
+            android:drawableEnd="@drawable/ic_eye_visible"
+            android:drawablePadding="12dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Layout cho checkbox "Nhớ mật khẩu" và text "Quên mật khẩu" -->
@@ -77,7 +79,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Quên mật khẩu"
+            android:text="Quên mật khẩu ?"
             android:textColor="#FFAF20"
             android:onClick="openForgotPasswordActivity"
             android:gravity="end"/>
