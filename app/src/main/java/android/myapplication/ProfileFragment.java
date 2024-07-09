@@ -1,6 +1,9 @@
 package android.myapplication;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,6 +87,14 @@ public class ProfileFragment extends Fragment {
     // Phương thức để xử lý sự kiện click vào nút "Đăng xuất"
     public void logout(View view) {
         FirebaseAuth.getInstance().signOut(); // Đăng xuất khỏi Firebase
+
+        // Xóa thông tin đăng nhập lưu trữ
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("login_preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("remember_me", false);
+        editor.remove("email");
+        editor.remove("password");
+        editor.apply();
 
         // Chuyển sang màn hình LoginActivity và đóng Fragment hiện tại
         Intent intent = new Intent(getActivity(), LoginActivity.class);
