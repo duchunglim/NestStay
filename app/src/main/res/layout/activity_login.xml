@@ -37,7 +37,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
-            android:background="@drawable/edittext_background"
             android:padding="12dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -53,7 +52,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:background="@drawable/edittext_background"
             android:padding="12dp"
             android:drawableEnd="@drawable/ic_eye_visible"
             android:drawablePadding="12dp" />

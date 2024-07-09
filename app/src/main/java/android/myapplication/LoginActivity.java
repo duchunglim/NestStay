@@ -111,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener(authResult -> {
                     // Đăng nhập thành công
-                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công.", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(LoginActivity.this, "Đăng nhập thành công.", Toast.LENGTH_SHORT).show();
 
                     // Lấy thông tin người dùng từ Realtime Database
                     FirebaseUser user = mAuth.getCurrentUser();
@@ -203,7 +203,7 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Sai mật khẩu hoặc Email không tồn tại.", Toast.LENGTH_SHORT).show();
                     } else {
                         // Xử lý các trường hợp khác
-                        Toast.makeText(LoginActivity.this, "Đăng nhập thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Đăng nhập thất bại: Email không hợp lệ. ", Toast.LENGTH_SHORT).show();
                     }
                 });
 

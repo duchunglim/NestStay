@@ -5,6 +5,8 @@ import static android.content.Context.MODE_PRIVATE;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +49,7 @@ public class ProfileFragment extends Fragment {
 
         // Xử lý sự kiện click vào nút "Đăng xuất"
         View logoutButton = view.findViewById(R.id.logout);
+        View editprofile = view.findViewById(R.id.editprofile);
         // Khởi tạo các phần tử UI
         TextView userNameTextView = view.findViewById(R.id.profile_name);
 
@@ -55,7 +58,7 @@ public class ProfileFragment extends Fragment {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
-            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            userRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
@@ -72,6 +75,16 @@ public class ProfileFragment extends Fragment {
                 }
             });
         }
+
+        editprofile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Chuyển sang màn hình LoginActivity và đóng Fragment hiện tại
+                Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         //Đăng xuất
         logoutButton.setOnClickListener(new View.OnClickListener() {
