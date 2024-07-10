@@ -2,6 +2,8 @@ package android.myapplication;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,6 +25,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
@@ -33,6 +36,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -41,10 +46,13 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class EditProfileActivity extends AppCompatActivity {
 
     private EditText edtName, edtPhone, edtAddress, edtBirthday;
     private TextView tvName, tvEmail, tvJoinDate;
+    private CircleImageView profileImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +70,7 @@ public class EditProfileActivity extends AppCompatActivity {
         Button updateButton = findViewById(R.id.updateButton);
         ImageView ivBack = findViewById(R.id.ivBack);
         tvJoinDate = findViewById(R.id.tvJoinDate);
+        profileImage = findViewById(R.id.profile_image);
 
         setupGenderSpinner();
 
@@ -80,6 +89,8 @@ public class EditProfileActivity extends AppCompatActivity {
                         String birthday = dataSnapshot.child("birthday").getValue(String.class);
                         String address = dataSnapshot.child("address").getValue(String.class);
                         String joinDate = dataSnapshot.child("createdAt").getValue(String.class);
+                        String gender = dataSnapshot.child("gender").getValue(String.class);
+                        String profileImageUrl = dataSnapshot.child("profileImage").getValue(String.class);
 
                         if (joinDate != null) {
                             tvJoinDate.setText(joinDate); // Hiển thị ngày tham gia
@@ -92,6 +103,21 @@ public class EditProfileActivity extends AppCompatActivity {
                         edtAddress.setText(address);
                         tvEmail.setText(email);
                         tvName.setText(name);
+
+                        // Thiết lập giới tính trong Spinner
+                        if (gender != null) {
+                            ArrayAdapter<String> genderAdapter = (ArrayAdapter<String>) spnGender.getAdapter();
+                            int position = genderAdapter.getPosition(gender);
+                            spnGender.setSelection(position);
+                        }
+
+                        // Hiển thị ảnh đại diện
+                        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+                            Glide.with(EditProfileActivity.this)
+                                    .load(profileImageUrl)
+                                    .placeholder(R.drawable.meme) // Ảnh mặc định
+                                    .into(profileImage);
+                        }
                     }
                 }
 
@@ -134,6 +160,57 @@ public class EditProfileActivity extends AppCompatActivity {
                 updateProfile();
             }
         });
+
+        // Thiết lập sự kiện khi nhấn vào ảnh đại diện để chọn ảnh từ thư viện
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGallery();
+            }
+        });
+    }
+
+    private void openGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+            Uri imageUri = data.getData();
+            // Cập nhật ảnh đại diện trên ImageView
+            profileImage.setImageURI(imageUri);
+            // Gọi phương thức để lưu ảnh lên Firebase
+            uploadImageToFirebase(imageUri);
+        }
+    }
+
+    private void uploadImageToFirebase(Uri imageUri) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference()
+                    .child("profile_images").child(user.getUid() + ".jpg");
+
+            storageReference.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+                            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference()
+                                    .child("users").child(user.getUid());
+                            Map<String, Object> updates = new HashMap<>();
+                            updates.put("profileImage", uri.toString());
+                            userRef.updateChildren(updates)
+                                    .addOnSuccessListener(aVoid ->
+                                            Toast.makeText(EditProfileActivity.this, "Cập nhật ảnh đại diện thành công.", Toast.LENGTH_SHORT).show())
+                                    .addOnFailureListener(e ->
+                                            Toast.makeText(EditProfileActivity.this, "Cập nhật ảnh đại diện thất bại.", Toast.LENGTH_SHORT).show());
+                        });
+                    })
+                    .addOnFailureListener(e ->
+                            Toast.makeText(EditProfileActivity.this, "Tải ảnh lên Firebase thất bại", Toast.LENGTH_SHORT).show());
+        }
     }
 
     public void showDatePickerDialog(View v) {

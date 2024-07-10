@@ -399,7 +399,7 @@ public class ReservationFragment extends Fragment {
                     "<b>Ngày:</b> " + date + "<br/>" +
                     "<b>Giờ:</b> " + time + "<br/>" +
                     "<b>Số lượng người:</b> " + numberOfPeople + "<br/>" +
-                    "<b>Ghi chú:</b> " + (notes.isEmpty() ? "Không có" : notes);
+                    "<b>Ghi chú:</b> " + (notes.isEmpty() ? "Không có ghi chú" : notes);
 
             // Tạo dialog tuỳ chỉnh từ custom_dialog.xml
             View dialogView = inflater.inflate(R.layout.custom_dialog, null);
