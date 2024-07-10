@@ -46,10 +46,12 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/editprofile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingVertical="12dp"
+                android:onClick="editprofile"
                 android:gravity="center_vertical">
 
                 <ImageView

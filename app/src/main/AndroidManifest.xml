@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -22,14 +22,13 @@
         <activity
             android:name=".HistoryActivity"
             android:exported="false" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDdy39rqBYlG98-FE1WWG3znuvzlQhqV7w" />
-
+            android:value="AIzaSyDdy39rqBYlG98-FE1WWG3znuvzlQhqV7w"/>
         <activity
-            android:name=".OrderPaymentActivity"
-            android:exported="false" />
+            android:name=".EditProfileActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
@@ -40,7 +39,7 @@
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".AddressActivity"
+            android:name=".OrderPaymentActivity"
             android:exported="false" />
         <activity
             android:name=".ItemDescriptionActivity"

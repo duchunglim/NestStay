@@ -5,4 +5,10 @@
     <string name="cart_icon">Giỏ hàng</string>
     <string name="profile_image">Hồ sơ</string>
     <string name="title_activity_address_profile">AddressProfileActivity</string>
+
+    <string-array name="gender_options">
+        <item>Nam</item>
+        <item>Nữ</item>
+        <item>Khác</item>
+    </string-array>
 </resources>
