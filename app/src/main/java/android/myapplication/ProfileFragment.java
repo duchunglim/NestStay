@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -47,6 +48,14 @@ public class ProfileFragment extends Fragment {
         // Khởi tạo các phần tử UI
         TextView userNameTextView = view.findViewById(R.id.profile_name);
 
+        LinearLayout linearLayoutAddress = view.findViewById(R.id.linearLayoutAddress);
+        linearLayoutAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AddressProfileActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // Lấy thông tin người dùng từ Firebase Realtime Database để cập nhật name
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

@@ -1,10 +1,13 @@
 package android.myapplication;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +24,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,14 +33,18 @@ import java.util.List;
 public class OrderPaymentActivity extends AppCompatActivity {
     ImageView backButton;
     RecyclerView recyclerView;
-    TextView seeMenu, total, subTotal, deliveryFee;
+    TextView seeMenu, total, subTotal, deliveryFee, tvAddress, tvPhone, tvName;
     RadioButton priority, standard;
     Button nextButton;
+    LinearLayout addressLayout;
+    String name, phone, address, note = "";
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private OrderPaymentAdapter orderPaymentAdapter;
     private List<CartProduct> cartProductList;
+    private static final int ADDRESS_REQUEST_CODE = 1;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,8 +62,19 @@ public class OrderPaymentActivity extends AppCompatActivity {
         priority = findViewById(R.id.priorityOption);
         standard = findViewById(R.id.standardOption);
         nextButton = findViewById(R.id.nextButton);
+        addressLayout = findViewById(R.id.addressLayout);
+        tvAddress = findViewById(R.id.address);
+        tvPhone = findViewById(R.id.phone);
+        tvName = findViewById(R.id.name);
 
         standard.setChecked(true);
+
+
+        addressLayout.setOnClickListener(v -> {
+            Intent intent = new Intent(OrderPaymentActivity.this, AddressProfileActivity.class);
+            startActivityForResult(intent, ADDRESS_REQUEST_CODE);
+        });
+
 
         priority.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -83,28 +102,37 @@ public class OrderPaymentActivity extends AppCompatActivity {
                 Toast.makeText(this, "Vui lòng chọn phương thức giao hàng", Toast.LENGTH_SHORT).show();
                 return;
             }
-            LocalDateTime timestamp = LocalDateTime.now(); // Use LocalDateTime.now() instead of Date
+            if (name == null || name.isEmpty() || phone == null || phone.isEmpty() || address == null || address.isEmpty()) {
+                Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin giao hàng", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            long currentDateTime = System.currentTimeMillis();
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy  h:mm a");
+            String time = simpleDateFormat.format(currentDateTime);
+
             String deliveryOption = priority.isChecked() ? "Priority" : "Standard";
+
+            // Modify this part according to your Order class constructor or use a Map if needed
             Order newOrder = new Order(
                     mDatabase.child("orders").push().getKey(),
                     cartProductList,
                     Double.parseDouble(total.getText().toString().replace("đ", "")),
                     deliveryOption,
-                    timestamp
+                    time,
+                    name,
+                    phone,
+                    address,
+                    note
             );
 
             // Update the user's order history in Firebase
             if (newOrder.getOrderId() != null) {
                 mDatabase.child("users").child(mAuth.getCurrentUser().getUid()).child("orders").child(newOrder.getOrderId()).setValue(newOrder)
                         .addOnSuccessListener(aVoid -> {
-                            // Handle success
                             Toast.makeText(OrderPaymentActivity.this, "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
-                            // Clear the cart after placing the order
                             mDatabase.child("users").child(mAuth.getCurrentUser().getUid()).child("cart").removeValue();
-                            // Redirect to a confirmation page or back to the main activity
                         })
                         .addOnFailureListener(e -> {
-                            // Handle failure
                             Toast.makeText(OrderPaymentActivity.this, "Đặt hàng thất bại", Toast.LENGTH_SHORT).show();
                         });
             }
@@ -177,6 +205,23 @@ public class OrderPaymentActivity extends AppCompatActivity {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             Log.d("OrderPaymentActivity", "Activity result received, refreshing cart items...");
             getCartItems();  // Refresh cart items after returning from ItemDescriptionActivity
+        }
+        if (requestCode == ADDRESS_REQUEST_CODE && resultCode == RESULT_OK && data != null) { // Added null check for data
+            AddressProfile selectedProfile = (AddressProfile) data.getSerializableExtra("selectedAddressProfile");
+            if (selectedProfile != null) { // Additional null check for selectedProfile
+                // set text for name, phone, address
+                tvName.setText(selectedProfile.getName());
+                tvPhone.setText(selectedProfile.getPhone());
+                tvAddress.setText(selectedProfile.getAddress());
+                name = selectedProfile.getName();
+                phone = selectedProfile.getPhone();
+                address = selectedProfile.getAddress();
+
+                tvPhone.setVisibility(View.VISIBLE);
+                tvName.setVisibility(View.VISIBLE);
+            } else {
+                Log.d("OrderPaymentActivity", "No address profile returned");
+            }
         }
     }
 }

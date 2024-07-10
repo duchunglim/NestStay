@@ -1,181 +1,222 @@
 package android.myapplication;
 
 import android.Manifest;
-import android.content.pm.PackageManager;
-import android.location.Location;
+import android.app.Activity;
+import android.content.Intent;
+import android.media.Image;
 import android.myapplication.R;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.AutocompletePrediction;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
-import com.google.android.libraries.places.api.net.PlacesClient;
+import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
-public class AddressActivity extends FragmentActivity implements OnMapReadyCallback {
-
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private GoogleMap mMap;
-    private EditText addressEditText;
-    private PlacesClient placesClient;
-    private FusedLocationProviderClient fusedLocationClient;
+public class AddressActivity extends AppCompatActivity {
+    //init firebase database
+    private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
+    EditText etName, etPhone, etAddress, etNote;
+    ImageView iconBack;
+    Button btnSubmit;
+    String profileId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address);
 
-        addressEditText = findViewById(R.id.addressEditText);
+        etName = findViewById(R.id.etName);
+        etPhone = findViewById(R.id.etPhone);
+        etAddress = findViewById(R.id.etAddress);
+        etNote = findViewById(R.id.etNotes);
+        btnSubmit = findViewById(R.id.btnSubmit);
+        iconBack = findViewById(R.id.icon_back);
 
-        // Initialize the Places API with your API key
-        Places.initialize(getApplicationContext(), "AIzaSyDdy39rqBYlG98-FE1WWG3znuvzlQhqV7w");
-        placesClient = Places.createClient(this);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        // Set up the map
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(this);
+        Intent intent = getIntent();
+        if (intent != null) {
+            profileId = intent.getStringExtra("PROFILE_ID");
         }
 
-        addressEditText.addTextChangedListener(new TextWatcher() {
+        if (user != null) {
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        String name = dataSnapshot.child("name").getValue(String.class);
+                        String phone = dataSnapshot.child("phone").getValue(String.class);
+
+                        // Hiển thị thông tin người dùng
+                        etName.setText(name);
+                        etPhone.setText(phone);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Xử lý lỗi đọc dữ liệu
+                }
+            });
+        }
+
+
+        etName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Do nothing
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!s.toString().isEmpty()) {
-                    getSuggestions(s.toString());
-                }
+                // Do nothing
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                if (s.toString().isEmpty()) {
+                    etName.setError("Vui lòng nhập tên");
+                } else if (!s.toString().matches("^[a-zA-Z\\s]+$")) {
+                    etName.setError("Tên không hợp lệ");
+                }
             }
         });
 
-        // Check location permission
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    LOCATION_PERMISSION_REQUEST_CODE);
-        } else {
-            getCurrentLocation();
-        }
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        // Enable MyLocation layer of Google Map
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        mMap.setMyLocationEnabled(true);
-    }
-
-    private void getSuggestions(String query) {
-        Log.d("AddressActivity", "Getting suggestions for query: " + query);
-
-        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
-                .setQuery(query)
-                .setCountry("VN")
-                .build();
-
-        placesClient.findAutocompletePredictions(request)
-                .addOnSuccessListener(response -> {
-                    List<AutocompletePrediction> predictions = response.getAutocompletePredictions();
-                    Log.d("AddressActivity", "Number of predictions: " + predictions.size());
-                    if (!predictions.isEmpty()) {
-                        AutocompletePrediction firstPrediction = predictions.get(0);
-                        String placeId = firstPrediction.getPlaceId();
-                        Log.d("AddressActivity", "First prediction place ID: " + placeId);
-                        getPlaceDetails(placeId);
-                    }
-                })
-                .addOnFailureListener(exception -> {
-                    Log.e("AddressActivity", "Error getting predictions: ", exception);
-                });
-    }
-
-    private void getPlaceDetails(String placeId) {
-        List<Place.Field> placeFields = Arrays.asList(Place.Field.LAT_LNG, Place.Field.NAME);
-        FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, placeFields).build();
-
-        placesClient.fetchPlace(request)
-                .addOnSuccessListener(response -> {
-                    Place place = response.getPlace();
-                    LatLng latLng = place.getLatLng();
-                    if (latLng != null) {
-                        updateMapLocation(latLng, place.getName());
-                    }
-                })
-                .addOnFailureListener(exception -> {
-                    exception.printStackTrace();
-                });
-    }
-
-    private void updateMapLocation(LatLng latLng, String placeName) {
-        mMap.clear();
-        mMap.addMarker(new MarkerOptions().position(latLng).title(placeName));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-    }
-
-    private void getCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, location -> {
-                    if (location != null) {
-                        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
-                        mMap.addMarker(new MarkerOptions().position(currentLatLng).title("Current Location"));
-                    } else {
-                        Toast.makeText(this, "Unable to get current location", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getCurrentLocation();
-            } else {
-                Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
+        etPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Do nothing
             }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Do nothing
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().isEmpty()) {
+                    etPhone.setError("Vui lòng nhập số điện thoại");
+                } else if (!s.toString().matches("^0[0-9]{9}$")) {
+                    etPhone.setError("Số điện thoại không hợp lệ");
+                }
+            }
+        });
+
+        etAddress.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Do nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Do nothing
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().isEmpty()) {
+                    etAddress.setError("Vui lòng nhập địa chỉ");
+                }
+            }
+        });
+
+        btnSubmit.setOnClickListener(v -> {
+            String name = etName.getText().toString();
+            String phone = etPhone.getText().toString();
+            String address = etAddress.getText().toString();
+            String note = etNote.getText().toString();
+
+            if (name.isEmpty() || phone.isEmpty() || address.isEmpty()) {
+                if (name.isEmpty()) {
+                    etName.setError("Vui lòng nhập tên");
+                }
+                if (phone.isEmpty()) {
+                    etPhone.setError("Vui lòng nhập số điện thoại");
+                }
+                if (address.isEmpty()) {
+                    etAddress.setError("Vui lòng nhập địa chỉ");
+                }
+                // Exit the method if any field is empty
+                return;
+            }
+
+            AddressProfile addressProfile = new AddressProfile(profileId, name, address, phone, note);
+
+            if (profileId != null && !profileId.isEmpty()) {
+                // Update existing profile
+                mDatabase.child("users").child(mAuth.getCurrentUser().getUid()).child("addressProfiles").child(profileId).setValue(addressProfile)
+                        .addOnSuccessListener(aVoid -> Toast.makeText(AddressActivity.this, "Hồ sơ đã được cập nhật", Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e -> Toast.makeText(AddressActivity.this, "Cập nhật hồ sơ thất bại", Toast.LENGTH_SHORT).show());
+            } else {
+                // Create new profile
+                String newId = mDatabase.child("users").child(mAuth.getCurrentUser().getUid()).child("addressProfiles").push().getKey();
+                addressProfile.setId(newId); // Set the new ID to the profile
+                mDatabase.child("users").child(mAuth.getCurrentUser().getUid()).child("addressProfiles").child(newId).setValue(addressProfile)
+                        .addOnSuccessListener(aVoid -> Toast.makeText(AddressActivity.this, "Đã thêm hồ sơ", Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e -> Toast.makeText(AddressActivity.this, "Thêm hồ sơ thất bại", Toast.LENGTH_SHORT).show());
+            }
+
+            finish();
+        });
+
+        iconBack.setOnClickListener(v -> {
+            finish();
+        });
+
+        // Retrieve the profile ID from the intent
+        String profileId = getIntent().getStringExtra("PROFILE_ID");
+
+        // Check if the profile ID is not null
+        if (profileId != null && !profileId.isEmpty()) {
+            // Use the profile ID to fetch the address profile from Firebase
+            DatabaseReference profileRef = mDatabase.child("users").child(mAuth.getCurrentUser().getUid()).child("addressProfiles").child(profileId);
+            profileRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        // Populate the TextViews with the fetched data
+                        AddressProfile addressProfile = dataSnapshot.getValue(AddressProfile.class);
+                        if (addressProfile != null) {
+                            etName.setText(addressProfile.getName());
+                            etPhone.setText(addressProfile.getPhone());
+                            etAddress.setText(addressProfile.getAddress());
+                            etNote.setText(addressProfile.getNotes());
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Toast.makeText(AddressActivity.this, "Khởi tạo thất bại.", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
+
+
     }
+
 }

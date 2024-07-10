@@ -56,7 +56,7 @@ public class ItemDescriptionActivity extends AppCompatActivity {
 
         productName.setText(name);
         productDescription.setText(description);
-        productPrice.setText(price);
+        productPrice.setText(price + "đ");
 
         if (quantity != null) {
             textViewQuantity.setText(quantity);
@@ -185,10 +185,10 @@ public class ItemDescriptionActivity extends AppCompatActivity {
                             if (newQuantity == 0) {
                                 itemRef.removeValue().addOnCompleteListener(task -> {
                                     if (task.isSuccessful()) {
-                                        Toast.makeText(ItemDescriptionActivity.this, "Item removed from cart", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ItemDescriptionActivity.this, "Đã xóa món ăn", Toast.LENGTH_SHORT).show();
                                         buttonDecrease.setEnabled(false);
                                     } else {
-                                        Toast.makeText(ItemDescriptionActivity.this, "Failed to remove item from cart", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ItemDescriptionActivity.this, "Bỏ món thất bại", Toast.LENGTH_SHORT).show();
                                     }
                                     setResult(RESULT_OK); // Set result to notify the calling activity
                                     finish();
@@ -197,10 +197,10 @@ public class ItemDescriptionActivity extends AppCompatActivity {
                                 itemRef.child("quantity").setValue(String.valueOf(newQuantity))
                                         .addOnCompleteListener(task -> {
                                             if (task.isSuccessful()) {
-                                                Toast.makeText(ItemDescriptionActivity.this, "Item quantity updated in cart", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(ItemDescriptionActivity.this, "Thêm món ăn thành công", Toast.LENGTH_SHORT).show();
                                                 buttonDecrease.setEnabled(true);
                                             } else {
-                                                Toast.makeText(ItemDescriptionActivity.this, "Failed to update item quantity", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(ItemDescriptionActivity.this, "Thêm món ăn thất bại", Toast.LENGTH_SHORT).show();
                                             }
                                             setResult(RESULT_OK); // Set result to notify the calling activity
                                             finish();
@@ -217,12 +217,12 @@ public class ItemDescriptionActivity extends AppCompatActivity {
                             itemRef.setValue(itemDetails)
                                     .addOnCompleteListener(task -> {
                                         if (task.isSuccessful()) {
-                                            Toast.makeText(ItemDescriptionActivity.this, "Item added to cart", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(ItemDescriptionActivity.this, "Thêm món ăn thành công", Toast.LENGTH_SHORT).show();
                                             buttonDecrease.setEnabled(true);
                                         } else {
-                                            Toast.makeText(ItemDescriptionActivity.this, "Failed to add item to cart", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(ItemDescriptionActivity.this, "Thêm món ăn thất bại", Toast.LENGTH_SHORT).show();
                                         }
-                                        setResult(RESULT_OK); // Set result to notify the calling activity
+                                        setResult(RESULT_OK);
                                         finish();
                                     });
                         }

@@ -3,6 +3,7 @@ package android.myapplication;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -12,6 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,11 +35,15 @@ public class OrdersFragment extends Fragment {
     private OrderAdapter orderAdapter;
     private List<ProductCategory> ordersList;
     private ImageButton cartButton;
+    private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ordersList = new ArrayList<ProductCategory>();
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
 
         try {
@@ -75,9 +87,32 @@ public class OrdersFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         cartButton = view.findViewById(R.id.cart_icon);
         cartButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), OrderPaymentActivity.class);
-            startActivity(intent);
+            DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference()
+                    .child("users")
+                    .child(mAuth.getCurrentUser().getUid())
+                    .child("cart");
+
+            cartRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists() && dataSnapshot.hasChildren()) {
+                        // Cart is not empty
+                        Intent intent = new Intent(getContext(), OrderPaymentActivity.class);
+                        startActivity(intent);
+                    } else {
+                        // Cart is empty
+                        Toast.makeText(getContext(), "Chưa có sản phẩm trong giỏ hàng.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Handle possible errors
+                    Toast.makeText(getContext(), "Failed to check cart. Please try again.", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
+
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         orderAdapter = new OrderAdapter(ordersList);
         recyclerView.setAdapter(orderAdapter);

@@ -20,6 +20,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,18 +43,45 @@ public class OrderItemActivity extends AppCompatActivity {
     private String categoryName;
     private ImageButton cartButton;
     private ImageView backButton;
+    private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_item);
         categoryName = getIntent().getStringExtra("productCategory");
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         backButton = findViewById(R.id.icon_back);
         cartButton = findViewById(R.id.cart_icon);
         cartButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, OrderPaymentActivity.class);
-            startActivity(intent);
+            DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference()
+                    .child("users")
+                    .child(mAuth.getCurrentUser().getUid())
+                    .child("cart");
+
+            cartRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists() && dataSnapshot.hasChildren()) {
+                        // Cart is not empty
+                        Intent intent = new Intent(OrderItemActivity.this, OrderPaymentActivity.class);
+                        startActivity(intent);
+                    } else {
+                        // Cart is empty
+                        Toast.makeText(getApplicationContext(), "Chưa có sản phẩm trong giỏ hàng.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Handle possible errors
+                    Toast.makeText(getApplicationContext(), "Failed to check cart. Please try again.", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
+
         backButton.setOnClickListener(v -> finish());
 
         // Set the category name

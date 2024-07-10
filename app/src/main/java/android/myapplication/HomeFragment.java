@@ -2,12 +2,15 @@ package android.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -22,7 +25,8 @@ import com.google.firebase.database.ValueEventListener;
 import org.w3c.dom.Text;
 
 public class HomeFragment extends Fragment {
-
+    private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
     private ViewPager2 viewPager2;
     private ImageView previousButton, nextButton;
     private int[] adImages = {
@@ -40,18 +44,12 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
         // Khởi tạo các phần tử UI trong fragment_home.xml liên kết top_nav
         TextView userNameTextView = view.findViewById(R.id.menu_top_nav).findViewById(R.id.user_name);
         ImageView cartIcon = view.findViewById(R.id.menu_top_nav).findViewById(R.id.cart_icon);
         TextView cartCount = view.findViewById(R.id.menu_top_nav).findViewById(R.id.cart_badge);
-        cartIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), OrderPaymentActivity.class);
-                startActivity(intent);
-            }
-        });
+
+
 
         // Hiển thị số lượng sản phẩm trong giỏ hàng
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -73,6 +71,31 @@ public class HomeFragment extends Fragment {
                 }
             });
         }
+
+        cartIcon.setOnClickListener(v -> {
+            DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid()).child("cart");
+
+
+            cartRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists() && dataSnapshot.hasChildren()) {
+                        // Cart is not empty
+                        Intent intent = new Intent(getContext(), OrderPaymentActivity.class);
+                        startActivity(intent);
+                    } else {
+                        // Cart is empty
+                        Toast.makeText(getContext(), "Chưa có sản phẩm trong giỏ hàng.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Handle possible errors
+                    Toast.makeText(getContext(), "Failed to check cart. Please try again.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
 
         viewPager2 = view.findViewById(R.id.ad_background);
         AdImageAdapter adapter = new AdImageAdapter(getContext(), adImages);

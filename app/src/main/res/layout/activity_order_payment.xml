@@ -53,6 +53,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/addressLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -66,16 +67,42 @@
                 android:layout_gravity="center"
                 android:src="@drawable/baseline_location_on_24" />
 
-            <TextView
-                android:id="@+id/address"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:orientation="vertical"
                 android:layout_weight="1"
                 android:layout_gravity="center"
-                android:text="69/68 D. Đặng Thùy Trâm, Phường 13, Bình Thạnh, TP.HCM"
-                android:textSize="16sp" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+                <TextView
+                    android:id="@+id/address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Vui lòng chọn địa chỉ giao hàng"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:textColor="@color/quantum_grey800"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:textColor="@color/quantum_grey800"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+
 
             <ImageView
                 android:id="@+id/editLocation"
@@ -174,93 +201,100 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:layout_marginHorizontal="15dp" />
+            android:layout_marginHorizontal="15dp"
+            android:layout_weight="1"/>
 
         <LinearLayout
-            android:layout_width="220dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginBottom="7dp"
-            android:layout_marginRight="10dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/subtotalLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Tạm tính"
-                android:textSize="17sp" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/subtotal"
-                android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="220dp"
                 android:layout_height="wrap_content"
-                android:gravity="end"
-                android:text="34000đ"
-                android:textSize="16sp" />
-        </LinearLayout>
+                android:layout_gravity="end"
+                android:layout_marginBottom="7dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="220dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginBottom="7dp"
-            android:layout_marginRight="10dp"
-            android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/subtotalLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Tạm tính"
+                    android:textSize="17sp" />
 
-            <TextView
-                android:id="@+id/deliveryFeeLabel"
-                android:layout_width="wrap_content"
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/subtotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="34000đ"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="220dp"
                 android:layout_height="wrap_content"
-                android:text="Phí giao hàng"
-                android:textSize="17sp" />
+                android:layout_gravity="end"
+                android:layout_marginBottom="7dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal">
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
+                <TextView
+                    android:id="@+id/deliveryFeeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phí giao hàng"
+                    android:textSize="17sp" />
 
-            <TextView
-                android:id="@+id/deliveryFee"
-                android:layout_width="wrap_content"
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/deliveryFee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="14000đ"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="220dp"
                 android:layout_height="wrap_content"
-                android:text="14000đ"
-                android:textSize="16sp" />
-        </LinearLayout>
+                android:layout_gravity="end"
+                android:layout_marginBottom="7dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="220dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginBottom="7dp"
-            android:layout_marginRight="10dp"
-            android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/totalLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tổng"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/totalLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tổng"
-                android:textSize="17sp"
-                android:textStyle="bold" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/total"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="48000đ"
-                android:textSize="17sp"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="48000đ"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
 
         <Button
