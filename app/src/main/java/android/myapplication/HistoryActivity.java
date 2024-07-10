@@ -1,6 +1,7 @@
 package android.myapplication;
 
 import android.os.Bundle;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -17,30 +18,32 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class HistoryActivity extends AppCompatActivity {
+    ImageView backButton;
+    ViewPager2 viewPager;
+    TabLayout tabLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
-        ViewPager2 viewPager = findViewById(R.id.viewPager);
+        tabLayout = findViewById(R.id.tabLayout);
+        viewPager = findViewById(R.id.viewPager);
+        backButton = findViewById(R.id.icon_back);
 
-        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
-        viewPager.setAdapter(adapter);
+        viewPager.setAdapter(new ViewPagerAdapter(this));
 
-        new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                switch (position) {
-                    case 0:
-                        tab.setText("Đơn hàng");
-                        break;
-                    case 1:
-                        tab.setText("Đặt chỗ");
-                        break;
-                }
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            if (position == 0) {
+                tab.setText("Đơn hàng");
+            } else if (position == 1) {
+                tab.setText("Đặt chỗ");
             }
         }).attach();
+
+        backButton.setOnClickListener(v -> {
+            finish();
+        });
+
     }
 }
 
