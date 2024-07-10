@@ -50,6 +50,8 @@ public class ReservationHistoryFragment extends Fragment {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         Reservation reservation = snapshot.getValue(Reservation.class);
                         if (reservation != null) {
+                            reservation.setId(snapshot.getKey());
+
                             reservationList.add(reservation);
                         }
                     }

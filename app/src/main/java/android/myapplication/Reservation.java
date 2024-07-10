@@ -1,6 +1,7 @@
 package android.myapplication;
 
 public class Reservation {
+    private String id;
     private String name;
     private String phone;
     private String address;
@@ -10,7 +11,8 @@ public class Reservation {
     private int numberOfPeople;
     private String notes;
 
-    public Reservation(String name, String phone, String address, String email, String date, String time, int numberOfPeople, String notes) {
+    public Reservation(String id, String name, String phone, String address, String email, String date, String time, int numberOfPeople, String notes) {
+        this.id = id;
         this.name = name;
         this.phone = phone;
         this.address = address;
@@ -22,6 +24,14 @@ public class Reservation {
     }
     public Reservation() {
         // Default constructor required for Firebase
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {

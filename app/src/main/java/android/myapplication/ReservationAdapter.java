@@ -51,17 +51,20 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
         }
 
         public void bind(Reservation reservation) {
-            // Hiển thị thông tin đặt bàn trong ViewHolder
+            // Display reservation details with ID in red color
+            String idHtml = "<font color='#FFAF20'><b>ID: </b>" + "<b>" + reservation.getId() + "</b>" + "</font><br/>";
             String reservationDetails =
-                    "<b>Ngày: </b>" + reservation.getDate() + " <b>Giờ: </b>" + reservation.getTime() + "<br/>" +
+                    idHtml +
+                            "<b>Ngày: </b>" + reservation.getDate() + " <b>Giờ: </b>" + reservation.getTime() + "<br/>" +
                             "<b>Email: </b>" + reservation.getEmail() + "<br/>" +
-                    "<b>Tên: </b>" + reservation.getName() + " <b>Số điện thoại: </b>" + reservation.getPhone() + "<br/>" +
+                            "<b>Tên: </b>" + reservation.getName() + " <b>Số điện thoại: </b>" + reservation.getPhone() + "<br/>" +
                             "<b>Địa chỉ: </b>" + reservation.getAddress() + "<br/>" +
                             "<b>Số lượng người: </b>" + reservation.getNumberOfPeople() + "<br/>" +
                             "<b>Ghi chú: </b>" + (reservation.getNotes() != null && !reservation.getNotes().isEmpty() ? reservation.getNotes() : "Không có ghi chú");
 
             tvReservationInfo.setText(Html.fromHtml(reservationDetails, Html.FROM_HTML_MODE_COMPACT));
         }
+
 
 
     }
