@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment {
         ImageView cartIcon = view.findViewById(R.id.menu_top_nav).findViewById(R.id.cart_icon);
         TextView cartCount = view.findViewById(R.id.menu_top_nav).findViewById(R.id.cart_badge);
         ImageView profileImage = view.findViewById(R.id.menu_top_nav).findViewById(R.id.profile_image);
-        Button history = view.findViewById(R.id.history);
+        Button history = view.findViewById(R.id.historyButton);
 
         history.setOnClickListener(new View.OnClickListener() {
             @Override
