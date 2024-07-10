@@ -56,8 +56,18 @@ public class ProfileFragment extends Fragment {
         // Khởi tạo các phần tử UI
         TextView userNameTextView = view.findViewById(R.id.profile_name);
         ImageView profile_image = view.findViewById(R.id.profile_image);
-
         LinearLayout linearLayoutAddress = view.findViewById(R.id.linearLayoutAddress);
+        LinearLayout LinerLayouthistory = view.findViewById(R.id.LinerLayouthistory);
+
+        LinerLayouthistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Chuyển sang màn hình LoginActivity và đóng Fragment hiện tại
+                Intent intent = new Intent(getActivity(), HistoryActivity.class);
+                startActivity(intent);
+            }
+        });
+
         linearLayoutAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
