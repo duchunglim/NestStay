@@ -116,7 +116,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
             Order newOrder = new Order(
                     mDatabase.child("orders").push().getKey(),
                     cartProductList,
-                    Double.parseDouble(total.getText().toString().replace("đ", "")),
+                    Integer.parseInt(total.getText().toString().replace("đ", "")),
                     deliveryOption,
                     time,
                     name,

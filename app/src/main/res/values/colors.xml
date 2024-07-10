@@ -4,4 +4,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="selected_color">#FFAF20</color>
     <color name="orange">#FFAF20</color>
+    <color name="tab_bg">#FFAF20</color>
+    <color name="tab_indicator">#FFFFFF</color>
+    <color name="tab_text">#FFFFFF</color>
 </resources>

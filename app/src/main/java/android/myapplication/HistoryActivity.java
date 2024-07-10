@@ -1,13 +1,11 @@
 package android.myapplication;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -20,68 +18,32 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class HistoryActivity extends AppCompatActivity {
+    ImageView backButton;
+    ViewPager2 viewPager;
+    TabLayout tabLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
-        ViewPager2 viewPager = findViewById(R.id.viewPager);
-        ImageView ivBack = findViewById(R.id.ivBack);
+        tabLayout = findViewById(R.id.tabLayout);
+        viewPager = findViewById(R.id.viewPager);
+        backButton = findViewById(R.id.icon_back);
 
-        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
-        viewPager.setAdapter(adapter);
+        viewPager.setAdapter(new ViewPagerAdapter(this));
 
-        ivBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
-        new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                switch (position) {
-                    case 0:
-                        tab.setText("Đặt món");
-                        break;
-                    case 1:
-                        tab.setText("Đặt chỗ");
-                        break;
-                }
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            if (position == 0) {
+                tab.setText("Đơn hàng");
+            } else if (position == 1) {
+                tab.setText("Đặt chỗ");
             }
         }).attach();
 
-
-        // Đặt background cho tab khi được chọn và không được chọn
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                tab.view.setBackgroundResource(R.drawable.tab_background_selected);
-                if (tab.getPosition() == 0) {
-                    tab.view.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.rounded_right_corner_background));
-                } else if (tab.getPosition() == 1) {
-                    tab.view.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.rounded_left_corner_background));
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                tab.view.setBackgroundResource(R.drawable.tab_background_unselected);
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                // Không cần làm gì khi tab được chọn lại
-            }
+        backButton.setOnClickListener(v -> {
+            finish();
         });
 
-        // Thiết lập background mặc định cho tab "Đặt món" khi khởi tạo
-        TabLayout.Tab defaultTab = tabLayout.getTabAt(0);
-        if (defaultTab != null) {
-            defaultTab.view.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.rounded_right_corner_background));
-        }
     }
 }
 

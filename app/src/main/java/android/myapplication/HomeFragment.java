@@ -31,6 +31,7 @@ public class HomeFragment extends Fragment {
     private FirebaseAuth mAuth;
     private ViewPager2 viewPager2;
     private ImageView previousButton, nextButton;
+    private Button historyButton;
     private int[] adImages = {
             R.drawable.adver1, // Replace with your actual drawable resource IDs
             R.drawable.adver2,
@@ -51,7 +52,7 @@ public class HomeFragment extends Fragment {
         ImageView cartIcon = view.findViewById(R.id.menu_top_nav).findViewById(R.id.cart_icon);
         TextView cartCount = view.findViewById(R.id.menu_top_nav).findViewById(R.id.cart_badge);
         ImageView profileImage = view.findViewById(R.id.menu_top_nav).findViewById(R.id.profile_image);
-        Button history = view.findViewById(R.id.history);
+        Button history = view.findViewById(R.id.historyButton);
 
         history.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +108,15 @@ public class HomeFragment extends Fragment {
                     Toast.makeText(getContext(), "Failed to check cart. Please try again.", Toast.LENGTH_SHORT).show();
                 }
             });
+        });
+
+        historyButton = view.findViewById(R.id.historyButton);
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), HistoryActivity.class);
+                startActivity(intent);
+            }
         });
 
         viewPager2 = view.findViewById(R.id.ad_background);

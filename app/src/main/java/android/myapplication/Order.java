@@ -6,7 +6,7 @@ import java.util.List;
 public class Order {
     private String orderId;
     private List<CartProduct> products;
-    private double totalAmount;
+    private int totalAmount;
     private String deliveryOption;
     private String name;
     private String phone;
@@ -17,7 +17,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(String orderId, List<CartProduct> products, double totalAmount, String deliveryOption, String time, String name, String phone, String address, String note) {
+    public Order(String orderId, List<CartProduct> products, int totalAmount, String deliveryOption, String time, String name, String phone, String address, String note) {
         this.orderId = orderId;
         this.products = products;
         this.totalAmount = totalAmount;
@@ -46,11 +46,11 @@ public class Order {
         this.products = products;
     }
 
-    public double getTotalAmount() {
+    public int getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(double totalAmount) {
+    public void setTotalAmount(int totalAmount) {
         this.totalAmount = totalAmount;
     }
 
@@ -92,5 +92,13 @@ public class Order {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }
