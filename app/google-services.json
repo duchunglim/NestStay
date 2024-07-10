@@ -13,7 +13,16 @@
           "package_name": "android.myapplication"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "771579171221-836idg3s6d4g1a35mt57pjos6jbbro8a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "android.myapplication",
+            "certificate_hash": "ffe1cb3b3614daa094c3cc292e25a1bb2dfdf539"
+          }
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDDr1ZJa09O3B85-d2467wJt8nX7XWfybI"

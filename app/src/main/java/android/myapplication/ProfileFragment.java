@@ -10,11 +10,13 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -53,6 +55,7 @@ public class ProfileFragment extends Fragment {
         View editprofile = view.findViewById(R.id.editprofile);
         // Khởi tạo các phần tử UI
         TextView userNameTextView = view.findViewById(R.id.profile_name);
+        ImageView profile_image = view.findViewById(R.id.profile_image);
 
         LinearLayout linearLayoutAddress = view.findViewById(R.id.linearLayoutAddress);
         linearLayoutAddress.setOnClickListener(new View.OnClickListener() {
@@ -72,9 +75,18 @@ public class ProfileFragment extends Fragment {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         String name = dataSnapshot.child("name").getValue(String.class);
+                        String profileImageUrl = dataSnapshot.child("profileImage").getValue(String.class);
 
                         // Hiển thị thông tin người dùng
                         userNameTextView.setText(name);
+
+                        // Hiển thị ảnh đại diện
+                        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+                            Glide.with(ProfileFragment.this)
+                                    .load(profileImageUrl)
+                                    .placeholder(R.drawable.meme) // Ảnh mặc định
+                                    .into(profile_image);
+                        }
                     }
                 }
 

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -48,6 +49,7 @@ public class HomeFragment extends Fragment {
         TextView userNameTextView = view.findViewById(R.id.menu_top_nav).findViewById(R.id.user_name);
         ImageView cartIcon = view.findViewById(R.id.menu_top_nav).findViewById(R.id.cart_icon);
         TextView cartCount = view.findViewById(R.id.menu_top_nav).findViewById(R.id.cart_badge);
+        ImageView profileImage = view.findViewById(R.id.menu_top_nav).findViewById(R.id.profile_image);
 
 
 
@@ -108,14 +110,22 @@ public class HomeFragment extends Fragment {
         // Lấy thông tin người dùng từ Firebase Realtime Database
         if (user != null) {
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
-            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            userRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         String name = dataSnapshot.child("name").getValue(String.class);
+                        String profileImageUrl = dataSnapshot.child("profileImage").getValue(String.class);
 
                         // Hiển thị thông tin người dùng
                         userNameTextView.setText(name);
+                        // Hiển thị ảnh đại diện
+                        if (profileImageUrl != null && !profileImageUrl.isEmpty() && isAdded()) {
+                            Glide.with(requireActivity())
+                                    .load(profileImageUrl)
+                                    .placeholder(R.drawable.meme) // Ảnh mặc định
+                                    .into(profileImage);
+                        }
                     }
                 }
 
