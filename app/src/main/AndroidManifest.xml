@@ -20,6 +20,9 @@
             android:name=".AddressProfileActivity"
             android:exported="false" />
         <activity
+            android:name=".AddressActivity"
+            android:exported="false" />
+        <activity
             android:name=".HistoryActivity"
             android:exported="false" />
         <meta-data
