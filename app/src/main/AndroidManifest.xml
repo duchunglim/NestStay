@@ -25,9 +25,6 @@
         <activity
             android:name=".HistoryActivity"
             android:exported="false" />
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDdy39rqBYlG98-FE1WWG3znuvzlQhqV7w"/>
         <activity
             android:name=".EditProfileActivity"
             android:exported="false"
