@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,7 +51,16 @@ public class HomeFragment extends Fragment {
         ImageView cartIcon = view.findViewById(R.id.menu_top_nav).findViewById(R.id.cart_icon);
         TextView cartCount = view.findViewById(R.id.menu_top_nav).findViewById(R.id.cart_badge);
         ImageView profileImage = view.findViewById(R.id.menu_top_nav).findViewById(R.id.profile_image);
+        Button history = view.findViewById(R.id.history);
 
+        history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Chuyển sang màn hình LoginActivity và đóng Fragment hiện tại
+                Intent intent = new Intent(getActivity(), HistoryActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         // Hiển thị số lượng sản phẩm trong giỏ hàng
