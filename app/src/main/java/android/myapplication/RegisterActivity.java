@@ -27,6 +27,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -315,6 +319,10 @@ public class RegisterActivity extends AppCompatActivity {
         user.put("email", email);
         user.put("name", name);
         user.put("phone", phone);
+
+        // Lấy thời gian hiện tại và chuyển đổi sang định dạng dd/MM/yyyy
+        String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+        user.put("createdAt", currentDate);  // Lưu ngày tham gia dưới dạng chuỗi
 
         // Lưu người dùng vào Realtime Database
         mDatabase.child("users").child(userId)

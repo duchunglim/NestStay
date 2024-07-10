@@ -34,14 +34,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class EditProfileActivity extends AppCompatActivity {
 
     private EditText edtName, edtPhone, edtAddress, edtBirthday;
-    private TextView tvName, tvEmail;
+    private TextView tvName, tvEmail, tvJoinDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public class EditProfileActivity extends AppCompatActivity {
         tvEmail = findViewById(R.id.tvEmail);
         Button updateButton = findViewById(R.id.updateButton);
         ImageView ivBack = findViewById(R.id.ivBack);
+        tvJoinDate = findViewById(R.id.tvJoinDate);
 
         setupGenderSpinner();
 
@@ -66,7 +70,7 @@ public class EditProfileActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
-            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            userRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
@@ -75,6 +79,11 @@ public class EditProfileActivity extends AppCompatActivity {
                         String email = dataSnapshot.child("email").getValue(String.class);
                         String birthday = dataSnapshot.child("birthday").getValue(String.class);
                         String address = dataSnapshot.child("address").getValue(String.class);
+                        String joinDate = dataSnapshot.child("createdAt").getValue(String.class);
+
+                        if (joinDate != null) {
+                            tvJoinDate.setText(joinDate); // Hiển thị ngày tham gia
+                        }
 
                         // Hiển thị thông tin người dùng
                         edtName.setText(name);
