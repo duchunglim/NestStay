@@ -2,7 +2,14 @@ package android.myapplication;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -21,6 +28,8 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -39,12 +48,16 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import android.Manifest;
+
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -53,6 +66,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private EditText edtName, edtPhone, edtAddress, edtBirthday;
     private TextView tvName, tvEmail, tvJoinDate;
     private CircleImageView profileImage;
+    private LocationManager locationManager;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +86,7 @@ public class EditProfileActivity extends AppCompatActivity {
         ImageView ivBack = findViewById(R.id.ivBack);
         tvJoinDate = findViewById(R.id.tvJoinDate);
         profileImage = findViewById(R.id.profile_image);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         setupGenderSpinner();
 
@@ -168,6 +184,109 @@ public class EditProfileActivity extends AppCompatActivity {
                 openGallery();
             }
         });
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null);
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    private final LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            if (location != null) {
+                getAddressFromLocation(location);
+            }
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+        @Override
+        public void onProviderEnabled(String provider) {}
+
+        @Override
+        public void onProviderDisabled(String provider) {}
+    };
+
+    private void getCurrentLocation() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        } else {
+            try {
+                Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if (lastKnownLocation != null) {
+                    getAddressFromLocation(lastKnownLocation);
+                } else {
+                    locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null);
+                }
+            } catch (SecurityException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Không thể truy cập vị trí: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void getAddressFromLocation(Location location) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            if (addresses != null && addresses.size() > 0) {
+                Address address = addresses.get(0);
+                StringBuilder sb = new StringBuilder();
+
+                String featureName = address.getFeatureName();
+                String thoroughfare = address.getThoroughfare();
+                if (featureName != null && thoroughfare != null && !featureName.equals(thoroughfare)) {
+                    sb.append(featureName).append(" ");
+                }
+                if (thoroughfare != null) {
+                    sb.append(thoroughfare).append(", ");
+                }
+
+                String subAdminArea = address.getSubAdminArea();
+                if (subAdminArea != null) {
+                    sb.append(subAdminArea).append(", ");
+                }
+
+                String adminArea = address.getAdminArea();
+                if (adminArea != null) {
+                    sb.append(adminArea).append(", ");
+                }
+
+                String countryName = address.getCountryName();
+                if (countryName != null) {
+                    sb.append(countryName);
+                }
+
+                String fullAddress = sb.toString().trim();
+                if (fullAddress.endsWith(",")) {
+                    fullAddress = fullAddress.substring(0, fullAddress.length() - 1);
+                }
+
+                edtAddress.setText(fullAddress);
+            } else {
+                Toast.makeText(this, "Không tìm thấy địa chỉ", Toast.LENGTH_SHORT).show();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Lỗi khi lấy địa chỉ: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getCurrentLocation();
+            } else {
+                Toast.makeText(this, "Quyền truy cập vị trí bị từ chối", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void openGallery() {

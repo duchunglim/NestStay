@@ -33,7 +33,7 @@ import java.util.List;
 public class OrderPaymentActivity extends AppCompatActivity {
     ImageView backButton;
     RecyclerView recyclerView;
-    TextView seeMenu, total, subTotal, deliveryFee, tvAddress, tvPhone, tvName;
+    TextView seeMenu, total, subTotal, deliveryFee, tvAddress, tvPhone, tvName, deliveryTime;
     RadioButton priority, standard;
     Button nextButton;
     LinearLayout addressLayout;
@@ -66,6 +66,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
         tvAddress = findViewById(R.id.address);
         tvPhone = findViewById(R.id.phone);
         tvName = findViewById(R.id.name);
+        deliveryTime = findViewById(R.id.deliveryTime);
 
         standard.setChecked(true);
 
@@ -79,6 +80,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
         priority.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 standard.setChecked(false);
+                deliveryTime.setText("10-15 phút");
                 calculateTotals();
             }
         });
@@ -86,6 +88,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
         standard.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 priority.setChecked(false);
+                deliveryTime.setText("15-30 phút");
                 calculateTotals();
             }
         });
