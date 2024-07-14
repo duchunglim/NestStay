@@ -434,6 +434,10 @@ public class ReservationFragment extends Fragment {
                     reservationRef.child("time").setValue(time);
                     reservationRef.child("numberOfPeople").setValue(numberOfPeople);
                     reservationRef.child("notes").setValue(notes);
+
+                    Intent intent = new Intent(getContext(), SuccessActivity.class);
+                    intent.putExtra("message", "Đặt hàng thành công");
+                    startActivity(intent);
                 }
             });
 

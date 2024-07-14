@@ -139,6 +139,10 @@ public class OrderPaymentActivity extends AppCompatActivity {
                             Toast.makeText(OrderPaymentActivity.this, "Đặt hàng thất bại", Toast.LENGTH_SHORT).show();
                         });
             }
+
+            Intent intent = new Intent(this, SuccessActivity.class);
+            intent.putExtra("message", "Đặt hàng thành công");
+            startActivity(intent);
         });
 
         backButton.setOnClickListener(v -> finish());
