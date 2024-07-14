@@ -1,28 +1,28 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_checked="true">
         <shape android:shape="rectangle">
-            <solid android:color="#FFA500" />
+            <stroke
+                android:width="3dp"
+                android:color="#FFAF20" />
             <corners android:radius="8dp" />
-            <textColor android:color="#FFFFFF" />
             <padding
-                android:bottom="8dp"
-                android:left="16dp"
-                android:right="16dp"
-                android:top="8dp" />
+                android:bottom="10dp"
+                android:left="18dp"
+                android:right="18dp"
+                android:top="10dp" />
         </shape>
     </item>
     <item android:state_checked="false">
         <shape android:shape="rectangle">
-            <solid android:color="#FFFFFF" />
             <stroke
                 android:width="2dp"
                 android:color="#000000" />
             <corners android:radius="8dp" />
             <padding
-                android:bottom="8dp"
-                android:left="16dp"
-                android:right="16dp"
-                android:top="8dp" />
+                android:bottom="10dp"
+                android:left="18dp"
+                android:right="18dp"
+                android:top="10dp" />
         </shape>
     </item>
 </selector>
