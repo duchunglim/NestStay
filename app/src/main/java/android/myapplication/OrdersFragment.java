@@ -1,5 +1,7 @@
 package android.myapplication;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -8,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,51 +36,51 @@ import java.util.List;
 public class OrdersFragment extends Fragment {
     private RecyclerView recyclerView;
     private OrderAdapter orderAdapter;
-    private List<ProductCategory> ordersList;
     private ImageButton cartButton;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
+    private List<ProductCategory> categories = new ArrayList<>();
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ordersList = new ArrayList<ProductCategory>();
         mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance().getReference("categories");
 
-
-        try {
-            JSONObject obj = new JSONObject(loadJSONFromAsset());
-            JSONArray menuArray = obj.getJSONArray("categories");
-
-            for (int i = 0; i < menuArray.length(); i++) {
-                JSONObject menuItem = menuArray.getJSONObject(i);
-                String categoryName = menuItem.getString("name");
-                String categoryImage = menuItem.getString("image");
-                ProductCategory productCategory = new ProductCategory(categoryName, categoryImage);
-                ordersList.add(productCategory);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
+        fetchCategoriesFromFirebase();
 
     }
 
-    private String loadJSONFromAsset() {
-        String json = null;
-        try {
-            InputStream is = getActivity().getAssets().open("menu.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-        return json;
+    private void fetchCategoriesFromFirebase() {
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
+                    String image = categorySnapshot.child("image").getValue(String.class);
+                    String name = categorySnapshot.child("name").getValue(String.class);
+                    ProductCategory category = new ProductCategory(name, image);
+                    categories.add(category);
+                }
+
+                // Use the categories list
+                for (ProductCategory category : categories) {
+                    Log.d(TAG, "Name: " + category.getName() + ", Image: " + category.getImage());
+                }
+
+                recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+                orderAdapter = new OrderAdapter(categories);
+                recyclerView.setAdapter(orderAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+
+        
     }
 
     @Override
@@ -113,9 +116,7 @@ public class OrdersFragment extends Fragment {
             });
         });
 
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        orderAdapter = new OrderAdapter(ordersList);
-        recyclerView.setAdapter(orderAdapter);
+
         return view;
     }
 }
