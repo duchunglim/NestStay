@@ -261,6 +261,7 @@ public class ReservationFragment extends Fragment {
             resetNumberSelection();
             v.setSelected(true);
             v.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.selected_color));
+            v.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.rounded_corners1));
 
             int id = v.getId();
             if (id == R.id.number1) {
