@@ -1,5 +1,6 @@
 package android.myapplication;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -47,6 +48,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -66,8 +70,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private EditText edtName, edtPhone, edtAddress, edtBirthday;
     private TextView tvName, tvEmail, tvJoinDate;
     private CircleImageView profileImage;
-    private LocationManager locationManager;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
+    private Uri newProfileImageUri; // Biến tạm thời lưu URI của ảnh đại diện mới
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,10 +89,8 @@ public class EditProfileActivity extends AppCompatActivity {
         ImageView ivBack = findViewById(R.id.ivBack);
         tvJoinDate = findViewById(R.id.tvJoinDate);
         profileImage = findViewById(R.id.profile_image);
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         setupGenderSpinner();
-
 
         // Lấy thông tin người dùng từ Firebase Realtime Database để cập nhật name
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -127,12 +128,15 @@ public class EditProfileActivity extends AppCompatActivity {
                             spnGender.setSelection(position);
                         }
 
-                        // Hiển thị ảnh đại diện
-                        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-                            Glide.with(EditProfileActivity.this)
-                                    .load(profileImageUrl)
-                                    .placeholder(R.drawable.meme) // Ảnh mặc định
-                                    .into(profileImage);
+                        // Kiểm tra nếu Activity chưa bị hủy trước khi gọi Glide
+                        if (!isDestroyed()) {
+                            // Hiển thị ảnh đại diện
+                            if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+                                Glide.with(EditProfileActivity.this)
+                                        .load(profileImageUrl)
+                                        .placeholder(R.drawable.icon_logo_orange) // Ảnh mặc định
+                                        .into(profileImage);
+                            }
                         }
                     }
                 }
@@ -184,110 +188,15 @@ public class EditProfileActivity extends AppCompatActivity {
                 openGallery();
             }
         });
+        // Lắng nghe sự kiện click vào edtAddress
+        edtAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null);
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-        }
     }
 
-    private final LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            if (location != null) {
-                getAddressFromLocation(location);
-            }
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-        @Override
-        public void onProviderEnabled(String provider) {}
-
-        @Override
-        public void onProviderDisabled(String provider) {}
-    };
-
-    private void getCurrentLocation() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-        } else {
-            try {
-                Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                if (lastKnownLocation != null) {
-                    getAddressFromLocation(lastKnownLocation);
-                } else {
-                    locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null);
-                }
-            } catch (SecurityException e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Không thể truy cập vị trí: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void getAddressFromLocation(Location location) {
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        try {
-            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            if (addresses != null && addresses.size() > 0) {
-                Address address = addresses.get(0);
-                StringBuilder sb = new StringBuilder();
-
-                String featureName = address.getFeatureName();
-                String thoroughfare = address.getThoroughfare();
-                if (featureName != null && thoroughfare != null && !featureName.equals(thoroughfare)) {
-                    sb.append(featureName).append(" ");
-                }
-                if (thoroughfare != null) {
-                    sb.append(thoroughfare).append(", ");
-                }
-
-                String subAdminArea = address.getSubAdminArea();
-                if (subAdminArea != null) {
-                    sb.append(subAdminArea).append(", ");
-                }
-
-                String adminArea = address.getAdminArea();
-                if (adminArea != null) {
-                    sb.append(adminArea).append(", ");
-                }
-
-                String countryName = address.getCountryName();
-                if (countryName != null) {
-                    sb.append(countryName);
-                }
-
-                String fullAddress = sb.toString().trim();
-                if (fullAddress.endsWith(",")) {
-                    fullAddress = fullAddress.substring(0, fullAddress.length() - 1);
-                }
-
-                edtAddress.setText(fullAddress);
-            } else {
-                Toast.makeText(this, "Không tìm thấy địa chỉ", Toast.LENGTH_SHORT).show();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Lỗi khi lấy địa chỉ: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getCurrentLocation();
-            } else {
-                Toast.makeText(this, "Quyền truy cập vị trí bị từ chối", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
     private void openGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -297,38 +206,9 @@ public class EditProfileActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            Uri imageUri = data.getData();
-            // Cập nhật ảnh đại diện trên ImageView
-            profileImage.setImageURI(imageUri);
-            // Gọi phương thức để lưu ảnh lên Firebase
-            uploadImageToFirebase(imageUri);
-        }
-    }
-
-    private void uploadImageToFirebase(Uri imageUri) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference()
-                    .child("profile_images").child(user.getUid() + ".jpg");
-
-            storageReference.putFile(imageUri)
-                    .addOnSuccessListener(taskSnapshot -> {
-                        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-                            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference()
-                                    .child("users").child(user.getUid());
-                            Map<String, Object> updates = new HashMap<>();
-                            updates.put("profileImage", uri.toString());
-                            userRef.updateChildren(updates)
-                                    .addOnSuccessListener(aVoid ->
-                                            Toast.makeText(EditProfileActivity.this, "Cập nhật ảnh đại diện thành công.", Toast.LENGTH_SHORT).show())
-                                    .addOnFailureListener(e ->
-                                            Toast.makeText(EditProfileActivity.this, "Cập nhật ảnh đại diện thất bại.", Toast.LENGTH_SHORT).show());
-                        });
-                    })
-                    .addOnFailureListener(e ->
-                            Toast.makeText(EditProfileActivity.this, "Tải ảnh lên Firebase thất bại", Toast.LENGTH_SHORT).show());
+            newProfileImageUri = data.getData(); // Lưu URI của ảnh mới
+            profileImage.setImageURI(newProfileImageUri); // Hiển thị ảnh đã chọn lên ImageView
         }
     }
 
@@ -369,8 +249,6 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
 
-
-
     private void setupGenderSpinner() {
         String[] genderOptions = getResources().getStringArray(R.array.gender_options);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
@@ -389,11 +267,8 @@ public class EditProfileActivity extends AppCompatActivity {
             String newName = edtName.getText().toString().trim();
             String newPhone = edtPhone.getText().toString().trim();
             String newBirthday = edtBirthday.getText().toString().trim();
-
-            // Lấy giá trị giới tính từ Spinner
-            Spinner spnGender = findViewById(R.id.spnGender);
+            Spinner spnGender = findViewById(R.id.spnGender); // Lấy giá trị giới tính từ Spinner
             String newGender = spnGender.getSelectedItem().toString().trim();
-
             String newAddress = edtAddress.getText().toString().trim();
 
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
@@ -406,20 +281,36 @@ public class EditProfileActivity extends AppCompatActivity {
             updates.put("gender", newGender);
             updates.put("address", newAddress);
 
-            // Cập nhật dữ liệu lên Firebase
-            userRef.updateChildren(updates)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(EditProfileActivity.this, "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(EditProfileActivity.this, "Cập nhật thông tin thất bại", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+
+            // Kiểm tra nếu có hình ảnh được chọn
+            if (newProfileImageUri != null) {
+                // Tải ảnh lên Firebase Storage trước
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference()
+                        .child("profile_images").child(user.getUid() + ".jpg");
+
+                storageReference.putFile(newProfileImageUri)
+                        .addOnSuccessListener(taskSnapshot -> {
+                            storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+                                updates.put("profileImage", uri.toString());
+
+                                // Cập nhật thông tin người dùng cùng với URL của ảnh đại diện
+                                userRef.updateChildren(updates)
+                                        .addOnSuccessListener(aVoid ->
+                                                Toast.makeText(EditProfileActivity.this, "Cập nhật ảnh đại diện thành công.", Toast.LENGTH_SHORT).show())
+                                        .addOnFailureListener(e ->
+                                                Toast.makeText(EditProfileActivity.this, "Cập nhật ảnh đại diện thất bại.", Toast.LENGTH_SHORT).show());
+                            });
+                        })
+                        .addOnFailureListener(e ->
+                                Toast.makeText(EditProfileActivity.this, "Tải ảnh lên Firebase thất bại", Toast.LENGTH_SHORT).show());
+            } else {
+                // Nếu không có hình ảnh, chỉ cập nhật thông tin cá nhân
+                userRef.updateChildren(updates)
+                        .addOnSuccessListener(aVoid ->
+                                Toast.makeText(EditProfileActivity.this, "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e ->
+                                Toast.makeText(EditProfileActivity.this, "Cập nhật thông tin thất bại", Toast.LENGTH_SHORT).show());
+            }
         }
     }
 }
