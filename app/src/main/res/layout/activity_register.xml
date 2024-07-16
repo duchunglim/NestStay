@@ -32,7 +32,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/rounded_corners3"
             android:paddingHorizontal="16dp"
             android:orientation="vertical"
             android:layout_weight="1"
@@ -42,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="ĐĂNG KÝ"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="24sp"
                 android:gravity="center"
                 android:textStyle="bold"
@@ -61,7 +60,6 @@
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
                     android:maxLength="20"
-                    android:background="@drawable/edittext_background"
                     android:padding="12dp"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -79,8 +77,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
-                    android:background="@drawable/edittext_background"
-                    android:padding="12dp"/>
+                    android:padding="12dp"
+                    android:drawableEnd="@drawable/ic_eye_visible"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -96,8 +94,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
-                    android:background="@drawable/edittext_background"
-                    android:padding="12dp"/>
+                    android:padding="12dp"
+                    android:drawableEnd="@drawable/ic_eye_visible"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -114,7 +112,6 @@
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:maxLength="20"
-                    android:background="@drawable/edittext_background"
                     android:padding="12dp"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -132,14 +129,9 @@
                     android:layout_height="wrap_content"
                     android:inputType="phone"
                     android:maxLength="10"
-                    android:background="@drawable/edittext_background"
                     android:padding="12dp"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
 
             <Button
                 android:id="@+id/registerButton"

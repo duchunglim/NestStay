@@ -53,8 +53,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:padding="12dp"
-            android:drawableEnd="@drawable/ic_eye_visible"
-            android:drawablePadding="12dp" />
+            android:drawableEnd="@drawable/ic_eye_visible" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Layout cho checkbox "Nhớ mật khẩu" và text "Quên mật khẩu" -->

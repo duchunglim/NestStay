@@ -52,12 +52,11 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
 
         public void bind(Reservation reservation) {
             // Display reservation details with ID in red color
-            String idHtml = "<font color='#FFAF20'><b>ID: </b>" + "<b>" + reservation.getId() + "</b>" + "</font><br/>";
+            String idHtml = "<font color='#FFAF20'>" + "<b>" + reservation.getTime() + "</b>" + " " + "<b>" + reservation.getDate() + "</b>" + "</font><br/>";
             String reservationDetails =
-                    idHtml +
-                            "<b>Ngày: </b>" + reservation.getDate() + " <b>Giờ: </b>" + reservation.getTime() + "<br/>" +
-                            "<b>Email: </b>" + reservation.getEmail() + "<br/>" +
-                            "<b>Tên: </b>" + reservation.getName() + " <b>Số điện thoại: </b>" + reservation.getPhone() + "<br/>" +
+                    idHtml +"<b>Email: </b>" + reservation.getEmail() + "<br/>" +
+                            "<b>Tên: </b>" + reservation.getName() + "<br/>" +
+                            " <b>Số điện thoại: </b>" + reservation.getPhone() + "<br/>" +
                             "<b>Địa chỉ: </b>" + reservation.getAddress() + "<br/>" +
                             "<b>Số lượng người: </b>" + reservation.getNumberOfPeople() + "<br/>" +
                             "<b>Ghi chú: </b>" + (reservation.getNotes() != null && !reservation.getNotes().isEmpty() ? reservation.getNotes() : "Không có ghi chú");
