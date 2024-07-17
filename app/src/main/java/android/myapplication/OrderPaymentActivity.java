@@ -110,7 +110,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
                 return;
             }
             long currentDateTime = System.currentTimeMillis();
-            @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy  h:mm a");
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy  h:mm a");
             String time = simpleDateFormat.format(currentDateTime);
 
             String deliveryOption = priority.isChecked() ? "Priority" : "Standard";

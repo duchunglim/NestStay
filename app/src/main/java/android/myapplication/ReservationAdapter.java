@@ -52,7 +52,7 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
 
         public void bind(Reservation reservation) {
             // Display reservation details with ID in red color
-            String idHtml = "<font color='#FFAF20'>" + "<b>" + reservation.getTime() + "</b>" + " " + "<b>" + reservation.getDate() + "</b>" + "</font><br/>";
+            String idHtml = "<font color='#FFAF20'>" + "<b>" + reservation.getDate() + "</b>" + " " + "<b>" + reservation.getTime() + "</b>" + "</font><br/>";
             String reservationDetails =
                     idHtml +"<b>Email: </b>" + reservation.getEmail() + "<br/>" +
                             "<b>Tên: </b>" + reservation.getName() + "<br/>" +

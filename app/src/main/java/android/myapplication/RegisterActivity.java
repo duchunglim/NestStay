@@ -358,18 +358,18 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Tạo tài khoản người dùng với email và mật khẩu
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        // Đăng ký thành công, lưu thông tin người dùng vào Realtime Database
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        if (user != null) {
-                            saveUserToDatabase(user.getUid(), email, name, phone);
-                        }
-                    } else {
-                        // Nếu đăng ký thất bại, hiển thị thông báo lỗi
-                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                        Toast.makeText(RegisterActivity.this, "Đăng ký thất bại.", Toast.LENGTH_SHORT).show();
+                .addOnSuccessListener(authResult -> {
+                    // Đăng ký thành công
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    if (user != null) {
+                        saveUserToDatabase(user.getUid(), email, name, phone);
+                        Toast.makeText(RegisterActivity.this, "Đăng ký thành công.", Toast.LENGTH_SHORT).show();
                     }
+                })
+                .addOnFailureListener(e -> {
+                    // Đăng ký thất bại
+                    Log.e(TAG, "Đăng ký thất bại", e); // Log lỗi để xem chi tiết trong Logcat
+                    Toast.makeText(RegisterActivity.this, "Đăng ký thất bại.", Toast.LENGTH_SHORT).show();
                 });
 
         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
