@@ -5,8 +5,6 @@ import static android.content.Context.MODE_PRIVATE;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -32,6 +32,9 @@ public class ProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private TextView userNameTextView;
+    private ImageView profileImage;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -46,104 +49,89 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view  = inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        // Xử lý sự kiện click vào nút "Đăng xuất"
-        View logoutButton = view.findViewById(R.id.logout);
-        View editprofile = view.findViewById(R.id.editprofile);
-        // Khởi tạo các phần tử UI
-        TextView userNameTextView = view.findViewById(R.id.profile_name);
-        ImageView profile_image = view.findViewById(R.id.profile_image);
+        // Initialize UI elements
+        userNameTextView = view.findViewById(R.id.profile_name);
+        profileImage = view.findViewById(R.id.profile_image);
         LinearLayout linearLayoutAddress = view.findViewById(R.id.linearLayoutAddress);
-        LinearLayout LinerLayouthistory = view.findViewById(R.id.LinerLayouthistory);
+        LinearLayout linearLayoutHistory = view.findViewById(R.id.LinerLayouthistory);
+        View logoutButton = view.findViewById(R.id.logout);
+        View editProfileButton = view.findViewById(R.id.editprofile);
 
-        LinerLayouthistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Chuyển sang màn hình LoginActivity và đóng Fragment hiện tại
-                Intent intent = new Intent(getActivity(), HistoryActivity.class);
-                startActivity(intent);
-            }
+        // Set click listeners
+        linearLayoutHistory.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), HistoryActivity.class);
+            startActivity(intent);
         });
 
-        linearLayoutAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AddressProfileActivity.class);
-                startActivity(intent);
-            }
+        linearLayoutAddress.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AddressProfileActivity.class);
+            startActivity(intent);
         });
 
-        // Lấy thông tin người dùng từ Firebase Realtime Database để cập nhật name
+        editProfileButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+            startActivity(intent);
+        });
+
+        logoutButton.setOnClickListener(this::logout);
+
+        // Fetch and display user data
+        fetchAndDisplayUserData();
+
+        return view;
+    }
+
+    private void fetchAndDisplayUserData() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
             userRef.addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists() && getActivity() != null) { // Ensure Fragment is attached
                         String name = dataSnapshot.child("name").getValue(String.class);
                         String profileImageUrl = dataSnapshot.child("profileImage").getValue(String.class);
 
-                        // Hiển thị thông tin người dùng
+                        // Display user data
                         userNameTextView.setText(name);
 
-                        // Hiển thị ảnh đại diện
+                        // Display profile image
                         if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
                             Glide.with(ProfileFragment.this)
                                     .load(profileImageUrl)
-                                    .placeholder(R.drawable.meme) // Ảnh mặc định
-                                    .into(profile_image);
+                                    .placeholder(R.drawable.meme)
+                                    .into(profileImage);
                         }
                     }
                 }
 
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Xử lý lỗi đọc dữ liệu
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Handle database error
                 }
             });
         }
-
-        editprofile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Chuyển sang màn hình LoginActivity và đóng Fragment hiện tại
-                Intent intent = new Intent(getActivity(), EditProfileActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-        //Đăng xuất
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logout(v);
-            }
-        });
-
-        return view;
     }
 
-    // Phương thức để xử lý sự kiện click vào nút "Đăng xuất"
-    public void logout(View view) {
-        FirebaseAuth.getInstance().signOut(); // Đăng xuất khỏi Firebase
+    private void logout(View view) {
+        FirebaseAuth.getInstance().signOut();
 
-        // Xóa thông tin đăng nhập lưu trữ
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("login_preferences", MODE_PRIVATE);
+        // Clear stored login information
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("login_preferences", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("remember_me", false);
         editor.remove("email");
         editor.remove("password");
         editor.apply();
 
-        // Chuyển sang màn hình LoginActivity và đóng Fragment hiện tại
+        // Navigate to LoginActivity
         Intent intent = new Intent(getActivity(), LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Xóa hết các Activity trên đầu ngăn xếp
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-        getActivity().finish(); // Đóng Fragment hiện tại
+        requireActivity().finish();
     }
 }

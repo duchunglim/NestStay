@@ -165,33 +165,10 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnSuccessListener(authResult -> {
                     // Đăng nhập thành công
                     Toast.makeText(LoginActivity.this, "Đăng nhập thành công.", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 
-                    // Lấy thông tin người dùng từ Realtime Database
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    if (user!= null) {
-                        DatabaseReference userRef = mDatabase.child("users").child(user.getUid());
-                        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.exists()) {
-                                    // Lấy thông tin người dùng từ dataSnapshot
-                                    String name = dataSnapshot.child("name").getValue(String.class);
-
-                                    // Chuyển thông tin người dùng sang HomeFragment
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    intent.putExtra("name", name);
-
-                                    startActivity(intent);
-                                    finish(); // Đóng LoginActivity để người dùng không thể quay lại màn hình đăng nhập
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                Log.e(TAG, "Lỗi khi đọc dữ liệu từ Firebase", databaseError.toException());
-                            }
-                        });
-                    }
+                    startActivity(intent);
+                    finish();
                 })
                 .addOnFailureListener(e -> {
                     // Xử lý lỗi
