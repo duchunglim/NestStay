@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Looper;
 
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -26,18 +29,18 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HomeFragment extends Fragment {
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private ViewPager2 viewPager2;
     private ImageView previousButton, nextButton;
     private Button historyButton;
-    private int[] adImages = {
-            R.drawable.adver1, // Replace with your actual drawable resource IDs
-            R.drawable.adver2,
-            R.drawable.adver3,
-            R.drawable.adver4,
-    };
+    private List<String> adImageUrls = new ArrayList<>();
+    private Handler autoScrollHandler;
+    private Runnable autoScrollRunnable;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -120,9 +123,6 @@ public class HomeFragment extends Fragment {
         });
 
         viewPager2 = view.findViewById(R.id.ad_background);
-        AdImageAdapter adapter = new AdImageAdapter(getContext(), adImages);
-        viewPager2.setAdapter(adapter);
-
         previousButton = view.findViewById(R.id.previousButton);
         nextButton = view.findViewById(R.id.nextButton);
 
@@ -154,46 +154,76 @@ public class HomeFragment extends Fragment {
                     // Xử lý lỗi đọc dữ liệu
                 }
             });
-        }
 
-        // Handle previous button click
-        previousButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            // Load ad image URLs
+            DatabaseReference adsRef = FirebaseDatabase.getInstance().getReference().child("ads");
+            adsRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    adImageUrls.clear();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String imageUrl = snapshot.getValue(String.class);
+                        if (imageUrl != null) {
+                            adImageUrls.add(imageUrl);
+                        }
+                    }
+                    AdImageAdapter adapter = new AdImageAdapter(getContext(), adImageUrls);
+                    viewPager2.setAdapter(adapter);
+
+                    // Only start auto-scroll if there are images
+                    if (!adImageUrls.isEmpty()) {
+                        startAutoScroll();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Handle errors
+                }
+            });
+
+
+            // Handle previous button click
+            previousButton.setOnClickListener(v -> {
                 int currentItem = viewPager2.getCurrentItem();
                 if (currentItem > 0) {
                     viewPager2.setCurrentItem(currentItem - 1, true);
                 }
-            }
-        });
+            });
 
-        // Handle next button click
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            // Handle next button click
+            nextButton.setOnClickListener(v -> {
                 int currentItem = viewPager2.getCurrentItem();
-                if (currentItem < adImages.length - 1) {
+                if (currentItem < adImageUrls.size() - 1) {
                     viewPager2.setCurrentItem(currentItem + 1, true);
                 }
-            }
-        });
-
-        // Auto-scroll functionality
-        autoScrollImages();
+            });
+        }
 
         return view;
     }
 
-    private void autoScrollImages() {
-        final int scrollInterval = 3000; // 3 seconds
-        viewPager2.postDelayed(new Runnable() {
+    private void startAutoScroll() {
+        autoScrollHandler = new Handler(Looper.getMainLooper());
+        autoScrollRunnable = new Runnable() {
             @Override
             public void run() {
                 int currentItem = viewPager2.getCurrentItem();
-                int nextItem = (currentItem + 1) % adImages.length;
+                int nextItem = (currentItem + 1) % adImageUrls.size();
                 viewPager2.setCurrentItem(nextItem, true);
-                viewPager2.postDelayed(this, scrollInterval);
+                autoScrollHandler.postDelayed(this, 3000); // 3 seconds
             }
-        }, scrollInterval);
+        };
+        autoScrollHandler.postDelayed(autoScrollRunnable, 3000); // 3 seconds
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Remove the auto-scroll callbacks when the fragment is destroyed
+        if (autoScrollHandler != null && autoScrollRunnable != null) {
+            autoScrollHandler.removeCallbacks(autoScrollRunnable);
+        }
+    }
+
 }

@@ -9,14 +9,18 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
+import java.util.List;
+
 public class AdImageAdapter extends RecyclerView.Adapter<AdImageAdapter.ViewHolder> {
 
     private Context context;
-    private int[] imageResources;
+    private List<String> imageUrls; // Changed to a list of image URLs
 
-    public AdImageAdapter(Context context, int[] imageResources) {
+    public AdImageAdapter(Context context, List<String> imageUrls) {
         this.context = context;
-        this.imageResources = imageResources;
+        this.imageUrls = imageUrls;
     }
 
     @NonNull
@@ -28,12 +32,16 @@ public class AdImageAdapter extends RecyclerView.Adapter<AdImageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.imageView.setImageResource(imageResources[position]);
+        String imageUrl = imageUrls.get(position);
+        Glide.with(context)
+                .load(imageUrl)
+                .placeholder(R.drawable.placeholder) // Replace with your placeholder drawable
+                .into(holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return imageResources.length;
+        return imageUrls.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -41,8 +49,7 @@ public class AdImageAdapter extends RecyclerView.Adapter<AdImageAdapter.ViewHold
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.imageView); // Corrected to R.id.imageView
+            imageView = itemView.findViewById(R.id.imageView);
         }
     }
 }
-
