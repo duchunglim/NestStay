@@ -150,22 +150,30 @@ public class EditProfileActivity extends AppCompatActivity {
 
         // Lắng nghe sự kiện thay đổi của edtName để cập nhật tvName
         edtName.addTextChangedListener(new TextWatcher() {
+            private String currentText = "";
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // No need to implement
+                // Không cần triển khai
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // No need to implement
+                String input = s.toString();
+                String filteredInput = input.replaceAll("\\d", ""); // Loại bỏ tất cả các số
+                if (!input.equals(filteredInput)) {
+                    edtName.setText(filteredInput);
+                    edtName.setSelection(filteredInput.length()); // Đặt con trỏ vào cuối văn bản
+                }
+                currentText = filteredInput;
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                // Cập nhật tvName khi edtName thay đổi
-                tvName.setText(s.toString().trim());
+
             }
         });
+
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override

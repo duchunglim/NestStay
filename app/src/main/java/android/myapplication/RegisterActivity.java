@@ -209,11 +209,24 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Name validation
         nameEditText.addTextChangedListener(new TextWatcher() {
+            private String currentText = "";
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String input = s.toString();
+                String filteredInput = input.replaceAll("\\d", ""); // Loại bỏ tất cả các số
+                if (!input.equals(filteredInput)) {
+                    nameEditText.setText(filteredInput);
+                    nameEditText.setSelection(filteredInput.length()); // Đặt con trỏ vào cuối văn bản
+                }
+                currentText = filteredInput;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
                 String name = s.toString().trim();
                 if (name.length() < 3) {
                     textInputLayoutName.setError("Tên phải có tối thiểu 3 ký tự.");
@@ -221,10 +234,8 @@ public class RegisterActivity extends AppCompatActivity {
                     textInputLayoutName.setErrorEnabled(false);
                 }
             }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
         });
+
 
         // Phone number validation
         phoneEditText.addTextChangedListener(new TextWatcher() {
