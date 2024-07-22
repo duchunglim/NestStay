@@ -302,6 +302,14 @@
             </LinearLayout>
         </LinearLayout>
 
+        <Spinner
+            android:id="@+id/paymentMethodSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginVertical="5dp"
+            android:textSize="16sp" />
+
         <Button
             android:id="@+id/nextButton"
             android:layout_width="match_parent"
