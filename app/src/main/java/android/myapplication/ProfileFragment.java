@@ -2,21 +2,29 @@ package android.myapplication;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +39,8 @@ public class ProfileFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
     private String mParam2;
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
 
     private TextView userNameTextView;
     private ImageView profileImage;
@@ -60,6 +70,9 @@ public class ProfileFragment extends Fragment {
         LinearLayout linearLayoutHistory = view.findViewById(R.id.LinerLayouthistory);
         View logoutButton = view.findViewById(R.id.logout);
         View editProfileButton = view.findViewById(R.id.editprofile);
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        View deleteAccountButton = view.findViewById(R.id.deleteAccountButton);
 
         // Set click listeners
         linearLayoutHistory.setOnClickListener(v -> {
@@ -78,6 +91,7 @@ public class ProfileFragment extends Fragment {
         });
 
         logoutButton.setOnClickListener(this::logout);
+        deleteAccountButton.setOnClickListener(this::deleteAccount);
 
         // Fetch and display user data
         fetchAndDisplayUserData();
@@ -134,4 +148,62 @@ public class ProfileFragment extends Fragment {
         startActivity(intent);
         requireActivity().finish();
     }
+
+    public void deleteAccount(View view) {
+        // Tạo LayoutInflater từ context hiện tại
+        LayoutInflater inflater = LayoutInflater.from(requireContext());
+        // Gán layout tùy chỉnh vào dialogView
+        View dialogView = inflater.inflate(R.layout.dialog_confirm_delete, null);
+        // Lấy tham chiếu đến TextInputEditText từ dialogView
+        TextInputEditText input = dialogView.findViewById(R.id.etPassword);
+
+        // Tạo và hiển thị hộp thoại xác nhận xóa tài khoản
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Bạn chắc chắn muốn xóa tài khoản?") // Đặt tiêu đề cho hộp thoại
+                .setView(dialogView) // Gán layout tùy chỉnh vào hộp thoại
+                .setPositiveButton("Có", (dialog, which) -> {
+                    // Lấy mật khẩu người dùng nhập vào
+                    String password = input.getText().toString();
+                    if (!password.isEmpty()) {
+                        // Lấy người dùng hiện tại từ FirebaseAuth
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            // Tạo chứng thực người dùng từ email và mật khẩu
+                            AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), password);
+                            // Tái xác thực người dùng
+                            user.reauthenticate(credential).addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    // Xóa tài khoản từ Firebase Authentication
+                                    user.delete().addOnCompleteListener(task1 -> {
+                                        if (task1.isSuccessful()) {
+                                            // Xóa tài khoản từ Firebase Database nếu cần
+                                            mDatabase.child("users").child(user.getUid()).removeValue().addOnCompleteListener(task2 -> {
+                                                if (task2.isSuccessful()) {
+                                                    Toast.makeText(requireContext(), "Xóa tài khoản thành công.", Toast.LENGTH_SHORT).show();
+                                                    // Điều hướng người dùng đến màn hình đăng nhập
+                                                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                    startActivity(intent);
+                                                    requireActivity().finish();
+                                                } else {
+                                                    Toast.makeText(requireContext(), "Lỗi khi xóa tài khoản từ Database.", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                        } else {
+                                            Toast.makeText(requireContext(), "Lỗi khi xóa tài khoản từ Authentication.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                } else {
+                                    Toast.makeText(requireContext(), "Mật khẩu không khớp.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    } else {
+                        Toast.makeText(requireContext(), "Vui lòng nhập mật khẩu.", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Không", null) // Nút "Không" không có hành động gì
+                .show(); // Hiển thị hộp thoại
+    }
+
 }

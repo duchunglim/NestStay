@@ -48,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputLayout textInputLayoutEmail, textInputLayoutPassword, textInputLayoutConfirmPassword, textInputLayoutName, textInputLayoutPhone;
     private Button registerButton;
     private ImageView icon_back;
-    private boolean isPasswordVisible = false;
+   // private boolean isPasswordVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,60 +92,60 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        setupPasswordVisibilityToggle();
+        //setupPasswordVisibilityToggle();
     }
 
-    private void setupPasswordVisibilityToggle() {
-        passwordEditText.setOnTouchListener((v, event) -> {
-            final int DRAWABLE_RIGHT = 2;
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                if (event.getRawX() >= (passwordEditText.getRight() - passwordEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                    togglePasswordVisibility();
-                    return true;
-                }
-            }
-            return false;
-        });
-
-        confirmPasswordEditText.setOnTouchListener((v, event) -> {
-            final int DRAWABLE_RIGHT = 2;
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                if (event.getRawX() >= (confirmPasswordEditText.getRight() - confirmPasswordEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                    togglePasswordVisibility1();
-                    return true;
-                }
-            }
-            return false;
-        });
-    }
-
-    private void togglePasswordVisibility() {
-        if(isPasswordVisible) {
-            // Ẩn mật khẩu
-            passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
-            passwordEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_eye_visible, 0);
-            isPasswordVisible = false;
-        } else {
-            // Hiển thị mật khẩu
-            passwordEditText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-            passwordEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_eye_invisible, 0);
-            isPasswordVisible = true;
-        }
-    }
-
-    private void togglePasswordVisibility1() {
-        if(isPasswordVisible) {
-            // Ẩn mật khẩu
-            confirmPasswordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
-            confirmPasswordEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_eye_visible, 0);
-            isPasswordVisible = false;
-        } else {
-            // Hiển thị mật khẩu
-            confirmPasswordEditText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-            confirmPasswordEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_eye_invisible, 0);
-            isPasswordVisible = true;
-        }
-    }
+//    private void setupPasswordVisibilityToggle() {
+//        passwordEditText.setOnTouchListener((v, event) -> {
+//            final int DRAWABLE_RIGHT = 2;
+//            if (event.getAction() == MotionEvent.ACTION_UP) {
+//                if (event.getRawX() >= (passwordEditText.getRight() - passwordEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+//                    togglePasswordVisibility();
+//                    return true;
+//                }
+//            }
+//            return false;
+//        });
+//
+//        confirmPasswordEditText.setOnTouchListener((v, event) -> {
+//            final int DRAWABLE_RIGHT = 2;
+//            if (event.getAction() == MotionEvent.ACTION_UP) {
+//                if (event.getRawX() >= (confirmPasswordEditText.getRight() - confirmPasswordEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+//                    togglePasswordVisibility1();
+//                    return true;
+//                }
+//            }
+//            return false;
+//        });
+//    }
+//
+//    private void togglePasswordVisibility() {
+//        if(isPasswordVisible) {
+//            // Ẩn mật khẩu
+//            passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+//            passwordEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_eye_visible, 0);
+//            isPasswordVisible = false;
+//        } else {
+//            // Hiển thị mật khẩu
+//            passwordEditText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+//            passwordEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_eye_invisible, 0);
+//            isPasswordVisible = true;
+//        }
+//    }
+//
+//    private void togglePasswordVisibility1() {
+//        if(isPasswordVisible) {
+//            // Ẩn mật khẩu
+//            confirmPasswordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+//            confirmPasswordEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_eye_visible, 0);
+//            isPasswordVisible = false;
+//        } else {
+//            // Hiển thị mật khẩu
+//            confirmPasswordEditText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+//            confirmPasswordEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_eye_invisible, 0);
+//            isPasswordVisible = true;
+//        }
+//    }
 
     private void setupTextWatchers() {
         // Email validation
