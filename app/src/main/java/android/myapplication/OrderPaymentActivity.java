@@ -2,20 +2,21 @@ package android.myapplication;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.myapplication.api.CreateOrder;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,16 +25,22 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import vn.zalopay.sdk.Environment;
+import vn.zalopay.sdk.ZaloPayError;
+import vn.zalopay.sdk.ZaloPaySDK;
+import vn.zalopay.sdk.listeners.PayOrderListener;
 
 public class OrderPaymentActivity extends AppCompatActivity {
     ImageView backButton;
     RecyclerView recyclerView;
     TextView seeMenu, total, subTotal, deliveryFee, tvAddress, tvPhone, tvName, deliveryTime;
+    Spinner paymentMethod;
     RadioButton priority, standard;
     Button nextButton;
     LinearLayout addressLayout;
@@ -67,15 +74,28 @@ public class OrderPaymentActivity extends AppCompatActivity {
         tvPhone = findViewById(R.id.phone);
         tvName = findViewById(R.id.name);
         deliveryTime = findViewById(R.id.deliveryTime);
+        paymentMethod = findViewById(R.id.paymentMethodSpinner);
 
         standard.setChecked(true);
 
+
+        String[] paymentMethods = {"Cash", "Zalo Pay"};
+        int[] paymentIcons = {R.drawable.ic_cash, R.drawable.ic_zalopay};
+
+        PaymentMethodAdapter adapter = new PaymentMethodAdapter(this, paymentMethods, paymentIcons);
+        paymentMethod.setAdapter(adapter);
+
+        //zalo
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        // ZaloPay SDK Init
+        ZaloPaySDK.init(2553, Environment.SANDBOX);
 
         addressLayout.setOnClickListener(v -> {
             Intent intent = new Intent(OrderPaymentActivity.this, AddressProfileActivity.class);
             startActivityForResult(intent, ADDRESS_REQUEST_CODE);
         });
-
 
         priority.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -140,9 +160,17 @@ public class OrderPaymentActivity extends AppCompatActivity {
                         });
             }
 
-            Intent intent = new Intent(this, SuccessActivity.class);
-            intent.putExtra("message", "Đặt hàng thành công");
-            startActivity(intent);
+            // check if Zalo Pay is selected
+            Toast.makeText(getApplicationContext(), paymentMethod.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
+            if (paymentMethod.getSelectedItemPosition() == 1){
+                requestZalo();
+            }
+
+            else {
+                Intent intent = new Intent(this, SuccessActivity.class);
+                intent.putExtra("message", "Đặt hàng thành công");
+                startActivity(intent);
+            }
         });
 
         backButton.setOnClickListener(v -> finish());
@@ -206,6 +234,41 @@ public class OrderPaymentActivity extends AppCompatActivity {
         nextButton.setText("Thanh toán · " + totalValue + "đ");
     }
 
+    public void requestZalo(){
+        CreateOrder orderApi = new CreateOrder();
+
+        try {
+            JSONObject data = orderApi.createOrder(total.getText().toString().replace("đ", ""));
+            String code = data.getString("return_code");
+
+            if (code.equals("1")) {
+                String token = data.getString("zp_trans_token");
+
+                ZaloPaySDK.getInstance().payOrder(OrderPaymentActivity.this, token, "demozpdk://app", new PayOrderListener() {
+                    @Override
+                    public void onPaymentSucceeded(String s, String s1, String s2) {
+                        Intent intent = new Intent(OrderPaymentActivity.this, SuccessActivity.class);
+                        intent.putExtra("message", "Đặt hàng thành công");
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onPaymentCanceled(String s, String s1) {
+                        Toast.makeText(OrderPaymentActivity.this, "Đã hủy thanh toán", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onPaymentError(ZaloPayError zaloPayError, String s, String s1) {
+
+                    }
+                });
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -230,6 +293,12 @@ public class OrderPaymentActivity extends AppCompatActivity {
                 Log.d("OrderPaymentActivity", "No address profile returned");
             }
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        ZaloPaySDK.getInstance().onResult(intent);
     }
 }
 

@@ -15,11 +15,10 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <FrameLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="@drawable/circle"
-            android:clipToOutline="true">
+            app:cardCornerRadius="30dp">
 
             <ImageView
                 android:id="@+id/profile_image"
@@ -28,7 +27,7 @@
                 android:src="@drawable/meme"
                 android:scaleType="centerCrop"
                 android:contentDescription="@string/profile_image" />
-        </FrameLayout>
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/user_name"
