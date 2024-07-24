@@ -19,6 +19,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.ReservationViewHolder> {
 
@@ -43,42 +46,36 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
         holder.bind(reservation);
 
         holder.btnCancelReservation.setOnClickListener(v -> {
-            new Thread(() -> {
-                String reservationId = reservation.getId();
-                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                if (currentUser != null) {
-                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference()
-                            .child("users")
-                            .child(currentUser.getUid())
-                            .child("reservations")
-                            .child(reservationId);
-                    userRef.removeValue().addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            // Cập nhật danh sách và giao diện trên luồng chính
-                            ((Activity) context).runOnUiThread(() -> {
-                                // Kiểm tra xem chỉ số có hợp lệ không trước khi xóa
-                                if (position >= 0 && position < reservationList.size()) {
-                                    reservationList.remove(position);
-                                    notifyItemRemoved(position);
-
-                                    // Đảm bảo rằng RecyclerView được cập nhật chính xác
-                                    if (reservationList.size() > position) {
-                                        notifyItemRangeChanged(position, reservationList.size() - position);
-                                    }
-                                } else {
-                                    // Xử lý trường hợp chỉ số không hợp lệ
-                                    Log.e("ReservationAdapter", "Invalid position: " + position);
-                                }
-                            });
-                        } else {
-                            // Xử lý lỗi
-                            Log.e("ReservationAdapter", "Error removing reservation: " + task.getException().getMessage());
-                        }
-                    });
-                }
-            }).start();
+            String reservationId = reservation.getId();
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (currentUser != null) {
+                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference()
+                        .child("users")
+                        .child(currentUser.getUid())
+                        .child("reservations")
+                        .child(reservationId);
+                userRef.removeValue().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Cập nhật danh sách và giao diện trên luồng chính
+                        ((Activity) context).runOnUiThread(() -> {
+                            // Kiểm tra xem chỉ số có hợp lệ không trước khi xóa
+                            if (position >= 1 && position < reservationList.size()) {
+                                reservationList.remove(position);
+                                notifyItemRemoved(position);
+                            } else {
+                                // Xử lý trường hợp chỉ số không hợp lệ
+                                Log.e("ReservationAdapter", "Invalid position: " + position);
+                            }
+                        });
+                    } else {
+                        // Xử lý lỗi
+                        Log.e("ReservationAdapter", "Error removing reservation: " + task.getException().getMessage());
+                    }
+                });
+            }
         });
     }
+
 
 
     @Override
@@ -111,6 +108,18 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationAdapter.
 
             // Cập nhật giao diện trên luồng chính
             ((Activity) context).runOnUiThread(() -> tvReservationInfo.setText(Html.fromHtml(reservationDetails, Html.FROM_HTML_MODE_COMPACT)));
+
+            // Kiểm tra ngày giờ hiện tại
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+            LocalDateTime reservationDateTime = LocalDateTime.parse(reservation.getDate() + " " + reservation.getTime(), formatter);
+            LocalDateTime now = LocalDateTime.now();
+
+            // Ẩn nút hủy nếu ngày giờ đã qua
+            if (reservationDateTime.isBefore(now)) {
+                btnCancelReservation.setVisibility(View.GONE);
+            } else {
+                btnCancelReservation.setVisibility(View.VISIBLE);
+            }
         }
     }
 }
