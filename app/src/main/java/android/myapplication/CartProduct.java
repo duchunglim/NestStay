@@ -3,14 +3,14 @@ package android.myapplication;
 public class CartProduct {
     private String name;
     private String image;
-    private String price;
+    private int price;
     private String quantity;
     private String description;
 
     public CartProduct() {
     }
 
-    public CartProduct(String name, String description, String image, String price, String quantity) {
+    public CartProduct(String name, String description, String image, int price, String quantity) {
         this.name = name;
         this.description = description;
         this.image = image;
@@ -26,7 +26,7 @@ public class CartProduct {
         return image;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
     }
 

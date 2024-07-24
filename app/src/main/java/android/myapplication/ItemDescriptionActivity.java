@@ -1,6 +1,5 @@
 package android.myapplication;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,9 +23,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ItemDescriptionActivity extends AppCompatActivity {
-    Button buttonBuyNow, buttonAddToCart;
-    ImageView productImage, iconBack, buttonIncrease, buttonDecrease;
-    TextView productName, productDescription, productPrice, textViewQuantity;
+
+    private Button buttonAddToCart;
+    private ImageView productImage, iconBack, iconFavorite, buttonDecrease, buttonIncrease;
+    private TextView productName, productDescription, productPrice, textViewQuantity;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
@@ -38,6 +38,22 @@ public class ItemDescriptionActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
+        initView();
+        setupProductDetails();
+        setupFavoriteIcon();
+        setupCartQuantity();
+
+        iconBack.setOnClickListener(v -> finish());
+
+        buttonIncrease.setOnClickListener(v -> updateQuantity(1));
+        buttonDecrease.setOnClickListener(v -> updateQuantity(-1));
+
+        iconFavorite.setOnClickListener(v -> toggleFavorite());
+
+        buttonAddToCart.setOnClickListener(v -> addToCart());
+    }
+
+    private void initView() {
         buttonAddToCart = findViewById(R.id.buttonAddToCart);
         buttonIncrease = findViewById(R.id.buttonIncrease);
         buttonDecrease = findViewById(R.id.buttonDecrease);
@@ -47,7 +63,10 @@ public class ItemDescriptionActivity extends AppCompatActivity {
         productName = findViewById(R.id.itemName);
         productDescription = findViewById(R.id.itemDescription);
         productPrice = findViewById(R.id.itemPrice);
+        iconFavorite = findViewById(R.id.icon_favorite);
+    }
 
+    private void setupProductDetails() {
         String name = getIntent().getStringExtra("name");
         String description = getIntent().getStringExtra("description");
         String price = getIntent().getStringExtra("price");
@@ -58,16 +77,12 @@ public class ItemDescriptionActivity extends AppCompatActivity {
         productDescription.setText(description);
         productPrice.setText(price + "đ");
 
-        if (quantity != null) {
-            textViewQuantity.setText(quantity);
-        } else {
-            textViewQuantity.setText("1");
-        }
+        textViewQuantity.setText(quantity != null ? quantity : "1");
 
         if (image != null && !image.isEmpty()) {
             Picasso.get()
                     .load(image)
-                    .error(R.drawable.placeholder) // Placeholder image if loading fails
+                    .error(R.drawable.placeholder)
                     .into(productImage, new Callback() {
                         @Override
                         public void onSuccess() {
@@ -76,76 +91,47 @@ public class ItemDescriptionActivity extends AppCompatActivity {
 
                         @Override
                         public void onError(Exception e) {
-                            // Handle error (e.g., log, show placeholder)
                             e.printStackTrace();
                         }
                     });
         } else {
             productImage.setImageResource(R.drawable.placeholder);
         }
+    }
 
-        if (mAuth != null) {
-            FirebaseUser user = mAuth.getCurrentUser();
-            if (user != null) {
-                String userId = user.getUid();
-                String itemName = name;
+    private void setupFavoriteIcon() {
+        if (mAuth != null && mAuth.getCurrentUser() != null) {
+            String userId = mAuth.getCurrentUser().getUid();
+            String itemName = productName.getText().toString();
 
-                DatabaseReference itemRef = mDatabase.child("users").child(userId).child("cart").child(itemName);
-                itemRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            String existingQuantityStr = dataSnapshot.child("quantity").getValue(String.class);
-                            textViewQuantity.setText(existingQuantityStr);
-                            buttonDecrease.setEnabled(true);
+            mDatabase.child("users").child(userId).child("favorites").child(itemName)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            updateFavoriteIcon(dataSnapshot.exists());
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Toast.makeText(ItemDescriptionActivity.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } else {
-                Toast.makeText(ItemDescriptionActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(ItemDescriptionActivity.this, "FirebaseAuth not initialized", Toast.LENGTH_SHORT).show();
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Toast.makeText(ItemDescriptionActivity.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
         }
+    }
 
-        buttonDecrease.setEnabled(false);
+    private void setupCartQuantity() {
+        if (mAuth != null && mAuth.getCurrentUser() != null) {
+            String userId = mAuth.getCurrentUser().getUid();
+            String itemName = productName.getText().toString();
 
-        buttonIncrease.setOnClickListener(v -> {
-            int quantity1 = Integer.parseInt(textViewQuantity.getText().toString());
-            quantity1++;
-            textViewQuantity.setText(String.valueOf(quantity1));
-            buttonDecrease.setEnabled(true);
-        });
-
-        buttonDecrease.setOnClickListener(v -> {
-            if (mAuth != null) {
-                FirebaseUser user = mAuth.getCurrentUser();
-                if (user != null) {
-                    String userId = user.getUid();
-                    String itemName = name;
-
-                    DatabaseReference itemRef = mDatabase.child("users").child(userId).child("cart").child(itemName);
-                    itemRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child("users").child(userId).child("cart").child(itemName)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
+                                String existingQuantityStr = dataSnapshot.child("quantity").getValue(String.class);
+                                textViewQuantity.setText(existingQuantityStr);
                                 buttonDecrease.setEnabled(true);
-                                int quantity = Integer.parseInt(textViewQuantity.getText().toString());
-                                if (quantity > 0) {
-                                    quantity--;
-                                    textViewQuantity.setText(String.valueOf(quantity));
-                                }
-                            } else {
-                                int quantity = Integer.parseInt(textViewQuantity.getText().toString());
-                                if (quantity > 1) {
-                                    quantity--;
-                                    textViewQuantity.setText(String.valueOf(quantity));
-                                }
                             }
                         }
 
@@ -154,88 +140,102 @@ public class ItemDescriptionActivity extends AppCompatActivity {
                             Toast.makeText(ItemDescriptionActivity.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
-                } else {
-                    Toast.makeText(ItemDescriptionActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(ItemDescriptionActivity.this, "FirebaseAuth not initialized", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        iconBack.setOnClickListener(v -> finish());
-
-        buttonAddToCart.setOnClickListener(v -> {
-            FirebaseUser user = mAuth.getCurrentUser();
-            if (mAuth != null && user != null) {
-                String userId = user.getUid();
-                String itemName = name;
-                String itemDesc = description;
-                String itemPrice = price;
-                String itemImage = image;
-                String itemQuantity = textViewQuantity.getText().toString();
-
-                DatabaseReference itemRef = mDatabase.child("users").child(userId).child("cart").child(itemName);
-
-                itemRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            int newQuantity = Integer.parseInt(itemQuantity);
-
-                            if (newQuantity == 0) {
-                                itemRef.removeValue().addOnCompleteListener(task -> {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(ItemDescriptionActivity.this, "Đã xóa món ăn", Toast.LENGTH_SHORT).show();
-                                        buttonDecrease.setEnabled(false);
-                                    } else {
-                                        Toast.makeText(ItemDescriptionActivity.this, "Bỏ món thất bại", Toast.LENGTH_SHORT).show();
-                                    }
-                                    setResult(RESULT_OK); // Set result to notify the calling activity
-                                    finish();
-                                });
-                            } else {
-                                itemRef.child("quantity").setValue(String.valueOf(newQuantity))
-                                        .addOnCompleteListener(task -> {
-                                            if (task.isSuccessful()) {
-                                                Toast.makeText(ItemDescriptionActivity.this, "Thêm món ăn thành công", Toast.LENGTH_SHORT).show();
-                                                buttonDecrease.setEnabled(true);
-                                            } else {
-                                                Toast.makeText(ItemDescriptionActivity.this, "Thêm món ăn thất bại", Toast.LENGTH_SHORT).show();
-                                            }
-                                            setResult(RESULT_OK); // Set result to notify the calling activity
-                                            finish();
-                                        });
-                            }
-                        } else {
-                            Map<String, String> itemDetails = new HashMap<>();
-                            itemDetails.put("name", itemName);
-                            itemDetails.put("description", itemDesc);
-                            itemDetails.put("price", itemPrice);
-                            itemDetails.put("image", itemImage);
-                            itemDetails.put("quantity", itemQuantity);
-
-                            itemRef.setValue(itemDetails)
-                                    .addOnCompleteListener(task -> {
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(ItemDescriptionActivity.this, "Thêm món ăn thành công", Toast.LENGTH_SHORT).show();
-                                            buttonDecrease.setEnabled(true);
-                                        } else {
-                                            Toast.makeText(ItemDescriptionActivity.this, "Thêm món ăn thất bại", Toast.LENGTH_SHORT).show();
-                                        }
-                                        setResult(RESULT_OK);
-                                        finish();
-                                    });
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Toast.makeText(ItemDescriptionActivity.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } else {
-                Toast.makeText(ItemDescriptionActivity.this, "User not logged in or FirebaseAuth not initialized", Toast.LENGTH_SHORT).show();
-            }
-        });
+        }
     }
+
+    private void updateQuantity(int delta) {
+        int quantity = Integer.parseInt(textViewQuantity.getText().toString()) + delta;
+        textViewQuantity.setText(String.valueOf(quantity));
+        buttonDecrease.setEnabled(quantity > 1);
+    }
+
+    private void toggleFavorite() {
+        boolean isFavorite = "favorite".equals(iconFavorite.getTag());
+        String name = productName.getText().toString();
+        String userId = mAuth.getCurrentUser().getUid();
+        DatabaseReference itemRef = mDatabase.child("users").child(userId).child("favorites").child(name);
+
+        if (isFavorite) {
+            itemRef.removeValue()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(ItemDescriptionActivity.this, "Đã xóa món ăn khỏi danh sách yêu thích", Toast.LENGTH_SHORT).show();
+                            updateFavoriteIcon(false);
+                        } else {
+                            Toast.makeText(ItemDescriptionActivity.this, "Xóa món ăn khỏi danh sách yêu thích thất bại", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            Map<String, Object> itemDetails = getItemDetails();
+            itemRef.setValue(itemDetails)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(ItemDescriptionActivity.this, "Thêm món ăn vào danh sách yêu thích thành công", Toast.LENGTH_SHORT).show();
+                            updateFavoriteIcon(true);
+                        } else {
+                            Toast.makeText(ItemDescriptionActivity.this, "Thêm món ăn vào danh sách yêu thích thất bại", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+
+    private void updateFavoriteIcon(boolean isFavorite) {
+        iconFavorite.setImageResource(isFavorite ? R.drawable.baseline_favorite_24 : R.drawable.baseline_favorite_border_24);
+        iconFavorite.setTag(isFavorite ? "favorite" : "not_favorite");
+    }
+
+    private void addToCart() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            String userId = user.getUid();
+            String itemName = productName.getText().toString();
+            DatabaseReference itemRef = mDatabase.child("users").child(userId).child("cart").child(itemName);
+            int quantity = Integer.parseInt(textViewQuantity.getText().toString());
+
+            itemRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (quantity == 0) {
+                        itemRef.removeValue().addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(ItemDescriptionActivity.this, "Đã xóa món ăn", Toast.LENGTH_SHORT).show();
+                                buttonDecrease.setEnabled(false);
+                                finish();
+                            } else {
+                                Toast.makeText(ItemDescriptionActivity.this, "Bỏ món thất bại", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        Map<String, Object> itemDetails = getItemDetails();
+                        itemDetails.put("quantity", String.valueOf(quantity));
+
+                        itemRef.setValue(itemDetails).addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(ItemDescriptionActivity.this, "Thêm món ăn thành công", Toast.LENGTH_SHORT).show();
+                                buttonDecrease.setEnabled(true);
+                                finish();
+                            } else {
+                                Toast.makeText(ItemDescriptionActivity.this, "Thêm món ăn thất bại", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Toast.makeText(ItemDescriptionActivity.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private Map<String, Object> getItemDetails() {
+        Map<String, Object> itemDetails = new HashMap<>();
+        itemDetails.put("name", productName.getText().toString());
+        itemDetails.put("description", productDescription.getText().toString());
+        itemDetails.put("price", Integer.parseInt(productPrice.getText().toString().replace("đ", "")));
+        itemDetails.put("image", getIntent().getStringExtra("image"));
+        return itemDetails;
+    }
+
 }

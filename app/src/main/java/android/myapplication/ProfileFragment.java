@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -58,6 +57,7 @@ public class ProfileFragment extends Fragment {
         profileImage = view.findViewById(R.id.profile_image);
         LinearLayout linearLayoutAddress = view.findViewById(R.id.linearLayoutAddress);
         LinearLayout linearLayoutHistory = view.findViewById(R.id.LinerLayouthistory);
+        LinearLayout linearLayoutFavorite = view.findViewById(R.id.linearLayoutFavorite);
         View logoutButton = view.findViewById(R.id.logout);
         View editProfileButton = view.findViewById(R.id.editprofile);
 
@@ -69,6 +69,11 @@ public class ProfileFragment extends Fragment {
 
         linearLayoutAddress.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), AddressProfileActivity.class);
+            startActivity(intent);
+        });
+
+        linearLayoutFavorite.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), FavoriteItemActivity.class);
             startActivity(intent);
         });
 

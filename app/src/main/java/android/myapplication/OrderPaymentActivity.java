@@ -152,7 +152,6 @@ public class OrderPaymentActivity extends AppCompatActivity {
             if (newOrder.getOrderId() != null) {
                 mDatabase.child("users").child(mAuth.getCurrentUser().getUid()).child("orders").child(newOrder.getOrderId()).setValue(newOrder)
                         .addOnSuccessListener(aVoid -> {
-                            Toast.makeText(OrderPaymentActivity.this, "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
                             mDatabase.child("users").child(mAuth.getCurrentUser().getUid()).child("cart").removeValue();
                         })
                         .addOnFailureListener(e -> {
@@ -161,7 +160,6 @@ public class OrderPaymentActivity extends AppCompatActivity {
             }
 
             // check if Zalo Pay is selected
-            Toast.makeText(getApplicationContext(), paymentMethod.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
             if (paymentMethod.getSelectedItemPosition() == 1){
                 requestZalo();
             }
@@ -221,7 +219,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
 
         // Calculate subtotal
         for (CartProduct product : cartProductList) {
-            subtotalValue += Integer.parseInt(product.getPrice()) * Integer.parseInt(product.getQuantity());
+            subtotalValue += product.getPrice() * Integer.parseInt(product.getQuantity());
         }
 
         // Calculate total
