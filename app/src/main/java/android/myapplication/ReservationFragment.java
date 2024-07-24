@@ -79,6 +79,7 @@ public class ReservationFragment extends Fragment {
         etNotes = view.findViewById(R.id.etNotes);
         btnConfirm = view.findViewById(R.id.btnConfirm);
 
+
         // Khởi tạo các phần tử UI cho cập nhật từ firebase xuống ứng dụng
         EditText etName = view.findViewById(R.id.etName);
         EditText etPhone = view.findViewById(R.id.etPhone);
