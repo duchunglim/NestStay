@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +28,8 @@ public class ReservationHistoryFragment extends Fragment {
     private RecyclerView recyclerView;
     private ReservationAdapter adapter;
     private List<Reservation> reservationList;
+    private TextView emptyTextView;
+
 
     @Nullable
     @Override
@@ -34,6 +37,7 @@ public class ReservationHistoryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_reservation_history, container, false);
 
         recyclerView = view.findViewById(R.id.recyclerView);
+        emptyTextView = view.findViewById(R.id.emptyTextView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         reservationList = new ArrayList<>();
         adapter = new ReservationAdapter(getActivity(), reservationList);
@@ -56,6 +60,7 @@ public class ReservationHistoryFragment extends Fragment {
                         }
                     }
                     adapter.notifyDataSetChanged();
+                    updateUI();
                 }
 
                 @Override
@@ -66,6 +71,16 @@ public class ReservationHistoryFragment extends Fragment {
         }
 
         return view;
+    }
+
+    private void updateUI() {
+        if (reservationList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyTextView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyTextView.setVisibility(View.GONE);
+        }
     }
 }
 

@@ -56,7 +56,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                                     Toast.makeText(ForgotPasswordActivity.this, "Email đặt lại mật khẩu đã được gửi", Toast.LENGTH_SHORT).show();
                                     Log.d(TAG, "Email sent.");
                                 } else {
-                                    Toast.makeText(ForgotPasswordActivity.this, "Lỗi khi gửi email đặt lại mật khẩu", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ForgotPasswordActivity.this, "Vui lòng nhập đúng email.", Toast.LENGTH_SHORT).show();
                                     Log.e(TAG, "sendPasswordResetEmail:failure", task.getException());
                                 }
                             }

@@ -3,6 +3,7 @@ package android.myapplication;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import android.text.Editable;
@@ -102,9 +103,11 @@ public class ReservationFragment extends Fragment {
                         String name = dataSnapshot.child("name").getValue(String.class);
                         String phone = dataSnapshot.child("phone").getValue(String.class);
                         String email = dataSnapshot.child("email").getValue(String.class);
+                        String address = dataSnapshot.child("address").getValue(String.class);
 
                         // Hiển thị thông tin người dùng
                         etName.setText(name);
+                        etAddress.setText(address);
                         etPhone.setText(phone);
                         etEmail.setText(email);
                     }
@@ -391,67 +394,125 @@ public class ReservationFragment extends Fragment {
             SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
             String date = sdfDate.format(selectedDateTime.getTime());
 
-            // Xây dựng chuỗi thông tin đặt bàn với định dạng HTML và xuống dòng
-            String reservationDetails =
-                    "<b>Tên:</b> " + name + "<br/>" +
-                    "<b>Số điện thoại:</b> " + phone + "<br/>" +
-                    "<b>Địa chỉ:</b> " + address + "<br/>" +
-                    "<b>Email:</b> " + email + "<br/>" +
-                    "<b>Ngày:</b> " + date + "<br/>" +
-                    "<b>Giờ:</b> " + time + "<br/>" +
-                    "<b>Số lượng người:</b> " + numberOfPeople + "<br/>" +
-                    "<b>Ghi chú:</b> " + (notes.isEmpty() ? "Không có ghi chú" : notes);
-
-            // Tạo dialog tuỳ chỉnh từ custom_dialog.xml
-            View dialogView = inflater.inflate(R.layout.custom_dialog, null);
-            TextView dialogTitle = dialogView.findViewById(R.id.dialogTitle);
-            TextView dialogMessage = dialogView.findViewById(R.id.dialogMessage);
-            Button btnConfirmDialog = dialogView.findViewById(R.id.btnConfirmDialog);
-            Button btnCancelDialog = dialogView.findViewById(R.id.btnCancelDialog);
-
-            dialogTitle.setText("THÔNG TIN ĐẶT BÀN");
-            dialogMessage.setText(Html.fromHtml(reservationDetails));
-
-            // Xây dựng AlertDialog từ dialogView
-            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-            builder.setView(dialogView);
-
-            AlertDialog alertDialog = builder.create();
-
-            // Xử lý khi người dùng chọn Xác nhận
-            btnConfirmDialog.setOnClickListener(dialogButton -> {
-                alertDialog.dismiss(); // Đóng dialog khi người dùng chọn Xác nhận
-                Toast.makeText(getActivity(), "Đặt bàn thành công.", Toast.LENGTH_LONG).show();
-                // Gửi thông tin đặt bàn lên Firebase Realtime Database của người dùng
-                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                if (currentUser != null) {
-                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUser.getUid());
-                    DatabaseReference reservationRef = userRef.child("reservations").push();
-                    reservationRef.child("name").setValue(name);
-                    reservationRef.child("phone").setValue(phone);
-                    reservationRef.child("address").setValue(address);
-                    reservationRef.child("email").setValue(email);
-                    reservationRef.child("date").setValue(date);
-                    reservationRef.child("time").setValue(time);
-                    reservationRef.child("numberOfPeople").setValue(numberOfPeople);
-                    reservationRef.child("notes").setValue(notes);
-
-                    Intent intent = new Intent(getContext(), SuccessActivity.class);
-                    intent.putExtra("message", "Đặt bàn thành công");
-                    startActivity(intent);
+            // Kiểm tra đơn đặt bàn trùng lặp
+            checkDuplicateReservation(phone, date, time, new OnDuplicateCheckListener() {
+                @Override
+                public void onResult(boolean isDuplicate) {
+                    if (isDuplicate) {
+                        Toast.makeText(getActivity(), "Đã có đơn đặt bàn trước đó.", Toast.LENGTH_LONG).show();
+                    } else {
+                        // Tiếp tục xử lý đặt bàn nếu không có đơn trùng lặp
+                        showConfirmationDialog(name, phone, address, email, date, time, numberOfPeople, notes);
+                    }
                 }
             });
-
-            // Xử lý khi người dùng chọn Hủy
-            btnCancelDialog.setOnClickListener(dialogButton -> {
-                alertDialog.dismiss(); // Đóng dialog khi người dùng chọn Hủy
-            });
-
-            alertDialog.show();
         });
 
-
         return view;
+    }
+
+    private void checkDuplicateReservation(String phone, String date, String time, OnDuplicateCheckListener listener) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            DatabaseReference reservationsRef = FirebaseDatabase.getInstance().getReference()
+                    .child("users")
+                    .child(currentUser.getUid())
+                    .child("reservations");
+
+            reservationsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    boolean isDuplicate = false;
+                    for (DataSnapshot reservationSnapshot : dataSnapshot.getChildren()) {
+                        String existingPhone = reservationSnapshot.child("phone").getValue(String.class);
+                        String existingDate = reservationSnapshot.child("date").getValue(String.class);
+                        String existingTime = reservationSnapshot.child("time").getValue(String.class);
+
+                        if (phone.equals(existingPhone) && date.equals(existingDate) && time.equals(existingTime)) {
+                            isDuplicate = true;
+                            break;
+                        }
+                    }
+                    listener.onResult(isDuplicate);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    listener.onResult(false); // Xử lý lỗi, giả định không có trùng lặp
+                }
+            });
+        } else {
+            listener.onResult(false); // Người dùng chưa đăng nhập, giả định không có trùng lặp
+        }
+    }
+
+    private interface OnDuplicateCheckListener {
+        void onResult(boolean isDuplicate);
+    }
+
+    private void showConfirmationDialog(String name, String phone, String address, String email,
+                                        String date, String time, int numberOfPeople, String notes) {
+        // Xây dựng chuỗi thông tin đặt bàn với định dạng HTML và xuống dòng
+        String reservationDetails =
+                "<b>Tên:</b> " + name + "<br/>" +
+                        "<b>Số điện thoại:</b> " + phone + "<br/>" +
+                        "<b>Địa chỉ:</b> " + address + "<br/>" +
+                        "<b>Email:</b> " + email + "<br/>" +
+                        "<b>Ngày:</b> " + date + "<br/>" +
+                        "<b>Giờ:</b> " + time + "<br/>" +
+                        "<b>Số lượng người:</b> " + numberOfPeople + "<br/>" +
+                        "<b>Ghi chú:</b> " + (notes.isEmpty() ? "Không có ghi chú" : notes);
+
+        // Tạo dialog tuỳ chỉnh từ custom_dialog.xml
+        View dialogView = getLayoutInflater().inflate(R.layout.custom_dialog, null);
+        TextView dialogTitle = dialogView.findViewById(R.id.dialogTitle);
+        TextView dialogMessage = dialogView.findViewById(R.id.dialogMessage);
+        Button btnConfirmDialog = dialogView.findViewById(R.id.btnConfirmDialog);
+        Button btnCancelDialog = dialogView.findViewById(R.id.btnCancelDialog);
+
+        dialogTitle.setText("THÔNG TIN ĐẶT BÀN");
+        dialogMessage.setText(Html.fromHtml(reservationDetails));
+
+        // Xây dựng AlertDialog từ dialogView
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        builder.setView(dialogView);
+
+        AlertDialog alertDialog = builder.create();
+
+        // Xử lý khi người dùng chọn Xác nhận
+        btnConfirmDialog.setOnClickListener(dialogButton -> {
+            alertDialog.dismiss(); // Đóng dialog khi người dùng chọn Xác nhận
+            saveReservationToFirebase(name, phone, address, email, date, time, numberOfPeople, notes);
+        });
+
+        // Xử lý khi người dùng chọn Hủy
+        btnCancelDialog.setOnClickListener(dialogButton -> {
+            alertDialog.dismiss(); // Đóng dialog khi người dùng chọn Hủy
+        });
+
+        alertDialog.show();
+    }
+
+    private void saveReservationToFirebase(String name, String phone, String address, String email,
+                                           String date, String time, int numberOfPeople, String notes) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUser.getUid());
+            DatabaseReference reservationRef = userRef.child("reservations").push();
+            reservationRef.child("name").setValue(name);
+            reservationRef.child("phone").setValue(phone);
+            reservationRef.child("address").setValue(address);
+            reservationRef.child("email").setValue(email);
+            reservationRef.child("date").setValue(date);
+            reservationRef.child("time").setValue(time);
+            reservationRef.child("numberOfPeople").setValue(numberOfPeople);
+            reservationRef.child("notes").setValue(notes);
+
+            Toast.makeText(getActivity(), "Đặt bàn thành công.", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(getContext(), SuccessActivity.class);
+            intent.putExtra("message", "Đặt bàn thành công");
+            startActivity(intent);
+        }
     }
 
     private void resetNumberSelection() {
