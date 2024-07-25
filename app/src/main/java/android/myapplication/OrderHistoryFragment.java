@@ -20,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class OrderHistoryFragment extends Fragment {
@@ -53,6 +54,7 @@ public class OrderHistoryFragment extends Fragment {
                     Order order = snapshot.getValue(Order.class);
                     orderList.add(order);
                 }
+                Collections.reverse(orderList);
                 orderHistoryAdapter = new OrderHistoryAdapter(orderList);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setAdapter(orderHistoryAdapter);

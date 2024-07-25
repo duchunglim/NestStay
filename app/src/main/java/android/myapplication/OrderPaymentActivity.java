@@ -79,7 +79,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
         standard.setChecked(true);
 
 
-        String[] paymentMethods = {"Cash", "Zalo Pay"};
+        String[] paymentMethods = {"Tiền mặt", "Zalo Pay"};
         int[] paymentIcons = {R.drawable.ic_cash, R.drawable.ic_zalopay};
 
         PaymentMethodAdapter adapter = new PaymentMethodAdapter(this, paymentMethods, paymentIcons);

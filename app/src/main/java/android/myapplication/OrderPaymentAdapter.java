@@ -39,7 +39,7 @@ public class OrderPaymentAdapter extends RecyclerView.Adapter<OrderPaymentAdapte
             intent.putExtra("name", orderItem.getName());
             intent.putExtra("description", orderItem.getDescription());
             intent.putExtra("image", orderItem.getImage());
-            intent.putExtra("price", orderItem.getPrice());
+            intent.putExtra("price", orderItem.getPrice()+"");
             intent.putExtra("quantity", orderItem.getQuantity());
             ((OrderPaymentActivity) v.getContext()).startActivityForResult(intent, 1);
         });
